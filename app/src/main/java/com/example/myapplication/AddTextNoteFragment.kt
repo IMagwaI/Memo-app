@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.example.myapplication.localdb.DbManager
 import kotlinx.android.synthetic.main.fragment_add_note.*
 
-class AddNoteFragment : Fragment() {
+class AddTextNoteFragment : Fragment() {
 
 
     override fun onCreateView(

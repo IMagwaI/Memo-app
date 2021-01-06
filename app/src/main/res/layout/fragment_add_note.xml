@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EFD6B3"
-    tools:context=".AddNoteFragment" >
+    tools:context=".AddTextNoteFragment" >
 
     <EditText
         android:id="@+id/titleText"

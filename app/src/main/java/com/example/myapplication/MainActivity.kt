@@ -13,6 +13,9 @@ import com.example.myapplication.localdb.DbManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.noteticket.view.*
 
+/**
+ * This is the MainActivity that show all saved notes
+ */
 class MainActivity : AppCompatActivity() {
     var listNotes = ArrayList<Note>()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,6 +25,9 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * get data after each acticity onStart callback
+     */
     override fun onStart() {
         super.onStart()
         querySearch("%")
@@ -30,11 +36,15 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+
+    /**
+     * get data and instantiate the list adapter
+     */
     fun querySearch(search: String) {
         var dbManager = DbManager(this)
         val projections = arrayOf("ID", "title", "description")
         val selectionArgs = arrayOf(search)
-        var cursor = dbManager.query(projections, "Title like ?", selectionArgs, "Title")
+        var cursor = dbManager.query(projections, "ID like ?", selectionArgs, "ID")
         if (cursor.moveToFirst()) {
             listNotes.clear()
             do {
@@ -64,6 +74,9 @@ class MainActivity : AppCompatActivity() {
             this.listNotesAdapter = listNotesAdapter
         }
 
+        /**
+         * add a note 'noteticket layout' view for each item in the list
+         */
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             val myView = layoutInflater.inflate(R.layout.noteticket, null)
             val note = listNotesAdapter[position]
@@ -78,13 +91,9 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this.context, "note deleted", Toast.LENGTH_LONG).show()
                 querySearch("%")
             }
-
             myView.modify.setOnClickListener {
                 goToUpdate(note)
             }
-
-
-
             return myView
         }
 
@@ -101,15 +110,16 @@ class MainActivity : AppCompatActivity() {
             return listNotesAdapter.size
         }
 
+        /**
+         * this method runs after clicking on the modify button corresponding to one of the displayed note
+         * it ll start the AddActivity to modify the note
+         */
         fun goToUpdate(note: Note) {
-            val bundle = Bundle()
-            bundle.putInt("id", note.id!!)
-            bundle.putString("title", note.title)
-            bundle.putString("description", note.description)
-            //TODO
-            /*requireView().findNavController()
-                .navigate(R.id.action_notesListFragment_to_addNoteFragment, bundle)
-*/
+            val intent = Intent(this.context, AddActivity::class.java)
+            intent.putExtra("id", note.id!!)
+            intent.putExtra("title", note.title)
+            intent.putExtra("description", note.description)
+            startActivity(intent)
         }
     }
 }

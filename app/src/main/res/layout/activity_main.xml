@@ -7,25 +7,22 @@
     tools:context=".MainActivity"
     android:background="#ffffff">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+
 
         <ListView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:id="@+id/myList"
-            >
-        </ListView>
-    </LinearLayout>
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+        />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="330dp"
-        android:layout_marginTop="500dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="27dp"
         android:clickable="true"
         android:src="@android:drawable/ic_input_add" />
 </RelativeLayout>
