@@ -18,12 +18,17 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
+    }
+
+    override fun onStart() {
+        super.onStart()
         querySearch("%")
         floatingAdd.setOnClickListener {
             val intent = Intent(this, AddActivity::class.java)
             startActivity(intent)
         }
-
     }
     fun querySearch(search: String) {
         var dbManager = DbManager(this)

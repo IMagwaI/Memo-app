@@ -18,57 +18,44 @@ class AddNoteFragment : Fragment() {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_add_note, container, false)
     }
-    var id:Int?=null
+
+    var id: Int? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
         saveButton.setOnClickListener {
             addNote()
         }
         //check edit
-        id=arguments?.getInt("id")
+        id = arguments?.getInt("id")
         println("---------------$id")
-        if (id!=0&&id!=null) {
-            var title = arguments?.getString("title")
+        if (id != 0 && id != null) {
+            val title = arguments?.getString("title")
             titleText.setText(title)
-            var description = arguments?.getString("description")
+            val description = arguments?.getString("description")
             multiLineText.setText(description)
         }
         super.onViewCreated(view, savedInstanceState)
     }
 
-    fun addNote(){
-        var title:String?=titleText.text.toString()
-        var note:String?=multiLineText.text.toString()
-        val values= ContentValues()
-        values.put("title",title)
-        values.put("description",note)
-        val dbManager= DbManager(this.requireActivity())
-        if(id!=0&&id!=null){
-            val selectionArgs= arrayOf(id.toString())
-            val id=dbManager.update(values,"ID=?",selectionArgs)
-            if(id>0)
-                Toast.makeText(this.requireContext(),"database updated",Toast.LENGTH_LONG).show()
+    fun addNote() {
+        val title: String? = titleText.text.toString()
+        val note: String? = multiLineText.text.toString()
+        val values = ContentValues()
+        values.put("title", title)
+        values.put("description", note)
+        val dbManager = DbManager(this.requireActivity())
+        if (id != 0 && id != null) {
+            val selectionArgs = arrayOf(id.toString())
+            val id = dbManager.update(values, "ID=?", selectionArgs)
+            if (id > 0)
+                Toast.makeText(this.requireContext(), "database updated", Toast.LENGTH_LONG).show()
 
-        }else {
+        } else {
             val id = dbManager.insertNote(values)
-            if(id>0)
-                Toast.makeText(this.requireContext(),"added to database",Toast.LENGTH_LONG).show()
+            if (id > 0)
+                Toast.makeText(this.requireContext(), "added to database", Toast.LENGTH_LONG).show()
 
         }
-
-
-    }
-   /* override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.addnotes_menu,menu)
-        super.onCreateOptionsMenu(menu, inflater)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.back ->{
-                requireView().findNavController().navigate(R.id.notesListFragment)
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }*/
 }
