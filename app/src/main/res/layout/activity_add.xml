@@ -6,5 +6,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/add_text_fragment"
+        class="com.example.myapplication.AddNoteFragment"
         />
 </RelativeLayout>
