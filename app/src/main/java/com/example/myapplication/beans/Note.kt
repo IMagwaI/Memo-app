@@ -1,4 +1,4 @@
-package com.example.note.sql
+package com.example.myapplication.beans
 
 class Note {
     var id: Int? = null

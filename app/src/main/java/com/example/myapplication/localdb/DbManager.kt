@@ -1,4 +1,4 @@
-package com.example.note.sql
+package com.example.myapplication.localdb
 
 import android.content.ContentValues
 import android.content.Context
