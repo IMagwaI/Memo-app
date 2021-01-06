@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
 
             } while (cursor.moveToNext())
         }
+        cursor.close()
         var myAdapter = MyNoteAdapter(this, listNotes)
         myList.adapter = myAdapter
     }
