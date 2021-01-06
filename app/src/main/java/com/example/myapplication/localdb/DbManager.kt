@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.database.sqlite.SQLiteQueryBuilder
 
-class DbManager {
+class DbManager(context: Context) {
 
     val dbName="myNotes"
     val dbTable="dbNotes"
@@ -20,16 +20,14 @@ class DbManager {
     val sqlCreateTable="CREATE TABLE IF NOT EXISTS $dbTable($colId INTEGER PRIMARY KEY,$colTitle TEXT,$colDescription TEXT,$colImg TEXT);"
     var sqlDB:SQLiteDatabase?=null
 
-    constructor(context: Context){
-        var db=DatabaseHelperNotes(context)
+    init {
+        val db=DatabaseHelperNotes(context)
         sqlDB=db.writableDatabase
     }
 
-    inner class DatabaseHelperNotes:SQLiteOpenHelper{
-        var context:Context?=null
-        constructor(context: Context):super(context,dbName,null,dbVersion){
-            this.context= context
-        }
+    inner class DatabaseHelperNotes(context: Context) :
+        SQLiteOpenHelper(context, dbName, null, dbVersion) {
+        var context:Context?= context
 
         override fun onCreate(db: SQLiteDatabase?) {
             db!!.execSQL(sqlCreateTable)
