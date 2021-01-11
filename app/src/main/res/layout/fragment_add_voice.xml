@@ -10,30 +10,53 @@
 
     <Button
         android:id="@+id/record"
+        android:layout_width="63dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textDisplay"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:background="@android:drawable/presence_audio_away" />
+
+    <EditText
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="70pt"
-        android:text="Enregistrer" />
+        android:layout_marginTop="50dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Title"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/textDisplay"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/record"
+        android:layout_below="@+id/title"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20pt"
+        android:layout_marginTop="20dp"
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine" />
 
-    <ImageButton
+    <Button
         android:id="@+id/save"
-        android:layout_width="76dp"
-        android:layout_height="63dp"
-        android:layout_below="@+id/textDisplay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20pt"
-        android:background="@android:drawable/ic_menu_save" />
+        android:background="#FFFFFF"
+        android:text="save"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/record"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:text="click here to start recording" />
 
 </RelativeLayout>

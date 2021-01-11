@@ -63,7 +63,7 @@ class AddVoiceFragment : Fragment() {
     }
 
     fun addNote(){
-        var title:String?="Test"
+        var title:String?=title.text.toString()
         var note:String?=textDisplay.text.toString()
         val values= ContentValues()
         values.put("title",title)
