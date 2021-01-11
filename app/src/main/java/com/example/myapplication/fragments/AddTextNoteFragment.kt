@@ -1,10 +1,11 @@
-package com.example.myapplication
+package com.example.myapplication.fragments
 
 import android.content.ContentValues
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.example.myapplication.R
 import com.example.myapplication.localdb.DbManager
 import kotlinx.android.synthetic.main.fragment_add_note.*
 
