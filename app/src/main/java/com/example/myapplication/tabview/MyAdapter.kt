@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import com.example.myapplication.fragments.AddDrawFragment
 import com.example.myapplication.fragments.AddTextNoteFragment
 import com.example.myapplication.fragments.AddVoiceFragment
 
@@ -23,7 +24,7 @@ internal class MyAdapter(
                 AddVoiceFragment()
             }
             2 -> {
-                AddTextNoteFragment()
+                AddDrawFragment()
             }
             else -> getItem(position)
         }

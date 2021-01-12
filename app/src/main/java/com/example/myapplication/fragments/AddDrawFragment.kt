@@ -7,7 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.myapplication.R
+import com.example.myapplication.extraBitmap
 import com.example.myapplication.localdb.DbManager
+import kotlinx.android.synthetic.main.fragment_draw.*
 import java.io.ByteArrayOutputStream
 
 class AddDrawFragment : Fragment() {
@@ -27,7 +30,7 @@ class AddDrawFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
     }
     fun addNote() {
-        var title: String? = "testDraw"
+        var title: String? = "Draw"
         var note: String? = "This is a drawing note, press edit button to display it"
         var bitmap: Bitmap? = extraBitmap
 

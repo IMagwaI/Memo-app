@@ -1,4 +1,4 @@
-package com.example.note
+package com.example.myapplication
 
 import android.content.Context
 import android.graphics.*

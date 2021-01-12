@@ -1,4 +1,4 @@
-package com.example.note
+package com.example.myapplication
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -9,9 +9,8 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
-import android.widget.Button
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
+
 private lateinit var extraCanvas: Canvas
 lateinit var extraBitmap: Bitmap
 private const val STROKE_WIDTH = 12f // has to be float
