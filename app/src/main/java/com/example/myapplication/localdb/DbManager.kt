@@ -15,9 +15,10 @@ class DbManager(context: Context) {
     val colTitle="title"
     val colDescription="description"
     val colImg="img"
+    val colDate="date"
 
     val dbVersion=1
-    val sqlCreateTable="CREATE TABLE IF NOT EXISTS $dbTable($colId INTEGER PRIMARY KEY,$colTitle TEXT,$colDescription TEXT,$colImg TEXT);"
+    val sqlCreateTable="CREATE TABLE IF NOT EXISTS $dbTable($colId INTEGER PRIMARY KEY,$colTitle TEXT,$colDescription TEXT,$colImg TEXT,$colDate date default CURRENT_DATE);"
     var sqlDB:SQLiteDatabase?=null
 
     init {
@@ -47,6 +48,8 @@ class DbManager(context: Context) {
     }
 
     fun query(projection:Array<String>,selection:String,selectionArgs:Array<String>,sortOrder:String):Cursor{
+        //sqlDB!!.execSQL("drop table if exists $dbTable")
+        //sqlDB!!.execSQL(sqlCreateTable)
         val db= SQLiteQueryBuilder()
         db.tables=dbTable
         val cursor=db.query(sqlDB,projection,selection,selectionArgs,null,null,sortOrder)
