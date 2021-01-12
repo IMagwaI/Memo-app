@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import com.example.myapplication.R
 import com.example.myapplication.localdb.DbManager
 import kotlinx.android.synthetic.main.fragment_add_note.*
+import java.util.*
 
 class AddTextNoteFragment : Fragment() {
 
@@ -41,6 +42,7 @@ class AddTextNoteFragment : Fragment() {
     fun addNote() {
         val title: String? = titleText.text.toString()
         val note: String? = multiLineText.text.toString()
+
         val values = ContentValues()
         values.put("title", title)
         values.put("description", note)

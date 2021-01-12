@@ -2,10 +2,6 @@ package com.example.myapplication
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import androidx.viewpager.widget.ViewPager
 import com.example.myapplication.tabview.MyAdapter
 import com.google.android.material.tabs.TabLayout
@@ -15,13 +11,13 @@ import com.google.android.material.tabs.TabLayout
  * actualy we ve only the AddTextNoteFragment
  * later we could use another fragments to add voice or draw
  */
-class AddActivity : AppCompatActivity() {
+class AddActivity : AppCompatActivity(){
     lateinit var tabLayout: TabLayout
     lateinit var viewPager: ViewPager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add)
-        title = "Speech recognition note"
+        title = "The memo"
         tabLayout = findViewById(R.id.tabLayout)
         viewPager = findViewById(R.id.viewPager)
         tabLayout.addTab(tabLayout.newTab().setIcon(R.mipmap.text))

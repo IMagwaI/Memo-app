@@ -9,7 +9,9 @@ import android.view.ViewConfiguration
 import androidx.core.content.res.ResourcesCompat
 import com.example.myapplication.R
 
-
+/**
+ * check PaintView.kt
+ */
 private lateinit var extraCanvas: Canvas
 lateinit var extraBitmapDisplay: Bitmap
 private const val STROKE_WIDTH = 12f // has to be float

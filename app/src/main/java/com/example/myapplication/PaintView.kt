@@ -1,26 +1,26 @@
 package com.example.myapplication
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Path
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import androidx.core.content.res.ResourcesCompat
 
+/**
+ * this is the drawing view (layout)
+ * to dispaly the draw as a note in the MainActivity, u must use DisplayView.kt
+ */
 private lateinit var extraCanvas: Canvas
 lateinit var extraBitmap: Bitmap
-private const val STROKE_WIDTH = 12f // has to be float
+var drawColor : Int=R.color.colorAccent
 
+private const val STROKE_WIDTH = 12f // has to be float
 class PaintView(context: Context?, attrs: AttributeSet?) : View(context, attrs) {
     private val backgroundColor = ResourcesCompat.getColor(resources, R.color.colorBackground, null)
-    private val drawColor = ResourcesCompat.getColor(resources, R.color.colorPaint, null)
     // Set up the paint with which to draw.
     private val paint = Paint().apply {
-        color = drawColor
         // Smooths out edges of what is drawn without affecting shape.
         isAntiAlias = true
         // Dithering affects how colors with higher-precision than the device are down-sampled.
@@ -85,6 +85,8 @@ class PaintView(context: Context?, attrs: AttributeSet?) : View(context, attrs) 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         motionTouchEventX = event.x
         motionTouchEventY = event.y
+        println("***********************************************"+drawColor)
+        paint.setColor(drawColor)
 
         when (event.action) {
             MotionEvent.ACTION_DOWN -> touchStart()

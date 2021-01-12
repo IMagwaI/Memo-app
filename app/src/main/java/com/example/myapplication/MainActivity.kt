@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
      */
     fun querySearch(search: String) {
         var dbManager = DbManager(this)
-        val projections = arrayOf("ID", "title", "description")
+        val projections = arrayOf("ID", "title", "description","date")
         val selectionArgs = arrayOf(search)
         var cursor = dbManager.query(projections, "ID like ?", selectionArgs, "ID")
         if (cursor.moveToFirst()) {
@@ -51,9 +51,11 @@ class MainActivity : AppCompatActivity() {
                 val id = cursor.getInt(cursor.getColumnIndex("ID"))
                 val title = cursor.getString(cursor.getColumnIndex("title"))
                 val description = cursor.getString(cursor.getColumnIndex("description"))
-                println("---------------------------------------")
-                println(id.toString() + title + description)
-                listNotes.add(Note(id, title, description))
+                val date = cursor.getString(3)
+
+                println("data = "+id.toString()+" "+ title+" "+description+" "+date)
+
+                listNotes.add(Note(id, title, description,date))
 
             } while (cursor.moveToNext())
         }
