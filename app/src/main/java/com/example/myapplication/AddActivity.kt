@@ -3,6 +3,9 @@ package com.example.myapplication
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
+import com.example.myapplication.fragments.descriptionNote
+import com.example.myapplication.fragments.idNote
+import com.example.myapplication.fragments.titleNote
 import com.example.myapplication.tabview.MyAdapter
 import com.google.android.material.tabs.TabLayout
 
@@ -15,6 +18,11 @@ class AddActivity : AppCompatActivity(){
     lateinit var tabLayout: TabLayout
     lateinit var viewPager: ViewPager
     override fun onCreate(savedInstanceState: Bundle?) {
+        idNote = intent.getIntExtra("id",0)
+        if(idNote!! >0) {
+            titleNote = intent.getStringExtra("title")
+            descriptionNote = intent.getStringExtra("description")
+        }
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add)
         title = "The memo"
@@ -24,6 +32,7 @@ class AddActivity : AppCompatActivity(){
         tabLayout.addTab(tabLayout.newTab().setIcon(R.mipmap.microphone))
         tabLayout.addTab(tabLayout.newTab().setIcon(R.mipmap.pencil))
         tabLayout.tabGravity = TabLayout.GRAVITY_FILL
+
         val adapter = MyAdapter(this, supportFragmentManager,
             tabLayout.tabCount)
         viewPager.adapter = adapter

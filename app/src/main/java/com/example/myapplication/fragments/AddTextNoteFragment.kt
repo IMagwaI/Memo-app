@@ -8,7 +8,9 @@ import androidx.fragment.app.Fragment
 import com.example.myapplication.R
 import com.example.myapplication.localdb.DbManager
 import kotlinx.android.synthetic.main.fragment_add_note.*
-import java.util.*
+var idNote: Int? = null
+var titleNote:String?=""
+var descriptionNote:String?=""
 
 class AddTextNoteFragment : Fragment() {
 
@@ -21,19 +23,16 @@ class AddTextNoteFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_add_note, container, false)
     }
 
-    var id: Int? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
         saveButton.setOnClickListener {
             addNote()
         }
         //check edit
-        id = arguments?.getInt("id")
-        println("---------------$id")
-        if (id != 0 && id != null) {
-            val title = arguments?.getString("title")
+        if (idNote != 0 && idNote != null) {
+            val title = titleNote
             titleText.setText(title)
-            val description = arguments?.getString("description")
+            val description = descriptionNote
             multiLineText.setText(description)
         }
         super.onViewCreated(view, savedInstanceState)
@@ -47,8 +46,8 @@ class AddTextNoteFragment : Fragment() {
         values.put("title", title)
         values.put("description", note)
         val dbManager = DbManager(this.requireActivity())
-        if (id != 0 && id != null) {
-            val selectionArgs = arrayOf(id.toString())
+        if (idNote != 0 && idNote != null) {
+            val selectionArgs = arrayOf(idNote.toString())
             val id = dbManager.update(values, "ID=?", selectionArgs)
             if (id > 0)
                 Toast.makeText(this.requireContext(), "database updated", Toast.LENGTH_LONG).show()

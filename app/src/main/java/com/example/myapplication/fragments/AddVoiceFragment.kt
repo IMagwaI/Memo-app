@@ -20,7 +20,6 @@ import kotlin.collections.ArrayList
 
 class AddVoiceFragment : Fragment() {
     private val RQ_SPEECH_REC=102
-    var id:Int?=null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,8 +68,8 @@ class AddVoiceFragment : Fragment() {
         values.put("title",title)
         values.put("description",note)
         val dbManager= DbManager(this.requireActivity())
-        if(id!=0&&id!=null){
-            val selectionArgs= arrayOf(id.toString())
+        if(idNote!=0&&idNote!=null){
+            val selectionArgs= arrayOf(idNote.toString())
             val id=dbManager.update(values,"ID=?",selectionArgs)
             if(id>0)
                 Toast.makeText(this.requireContext(),"database updated",Toast.LENGTH_LONG).show()
