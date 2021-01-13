@@ -4,10 +4,14 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.SearchView
 import android.widget.Toast
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.beans.Note
 import com.example.myapplication.localdb.DbManager
 import kotlinx.android.synthetic.main.activity_main.*
@@ -37,14 +41,58 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * get data and instantiate the list adapter
-     */
+    // search
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main, menu)
+        val searchItem = menu?.findItem(R.id.nav_search)
+        if (searchItem != null) {
+            val seachView = searchItem.actionView as SearchView
+            seachView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(p0: String?): Boolean {
+                    return true
+                }
+
+                override fun onQueryTextChange(p0: String?): Boolean {
+                    if (p0!!.isNotEmpty()) {
+                        val key = "%" + p0 + "%"
+                        searchBar(key)
+                    } else {
+                        searchBar("%")
+                    }
+                    return true
+                }
+
+            })
+        }
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    fun searchBar(search: String) {
+        var dbManager = DbManager(this)
+        val projections = arrayOf("ID", "title", "description", "date")
+        val selectionArgs = arrayOf(search)
+        var cursor = dbManager.query(projections, "title like ?", selectionArgs, "date" + " DESC")
+        if (cursor.moveToFirst()) {
+            listNotes.clear()
+            do {
+                val id = cursor.getInt(cursor.getColumnIndex("ID"))
+                val title = cursor.getString(cursor.getColumnIndex("title"))
+                val description = cursor.getString(cursor.getColumnIndex("description"))
+                val date = cursor.getString(3)
+                listNotes.add(Note(id, title, description, date))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        var myAdapter = MyNoteAdapter(this, listNotes)
+        myList.adapter = myAdapter
+    }
+
     fun querySearch(search: String) {
         var dbManager = DbManager(this)
-        val projections = arrayOf("ID", "title", "description","date")
+        val projections = arrayOf("ID", "title", "description", "date")
         val selectionArgs = arrayOf(search)
-        var cursor = dbManager.query(projections, "ID like ?", selectionArgs, "ID")
+        var cursor = dbManager.query(projections, "ID like ?", selectionArgs, "date" + " DESC")
         if (cursor.moveToFirst()) {
             listNotes.clear()
             do {
@@ -53,14 +101,13 @@ class MainActivity : AppCompatActivity() {
                 val description = cursor.getString(cursor.getColumnIndex("description"))
                 val date = cursor.getString(3)
 
-                println("data = $id $title $description $date")
+                println("data = " + id.toString() + " " + title + " " + description + " " + date)
 
-                listNotes.add(Note(id, title, description,date))
+                listNotes.add(Note(id, title, description, date))
 
             } while (cursor.moveToNext())
         }
         cursor.close()
-        dbManager.sqlDB?.close()
         var myAdapter = MyNoteAdapter(this, listNotes)
         myList.adapter = myAdapter
     }
@@ -85,8 +132,24 @@ class MainActivity : AppCompatActivity() {
             val note = listNotesAdapter[position]
             myView.textTitle.text = note.title
             myView.textView.text = note.description
+            myView.date.text = note.date
             val selectionArgs = arrayOf(note.id.toString())
+            val dbManager = DbManager(this.context!!)
+///////////////////////// testing
+            val itemTouchHelperCallback = object :
+                ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+                override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
 
+                    return false
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    var pos = viewHolder.adapterPosition
+                    val nbr = dbManager.delete("ID=?", selectionArgs)
+                }
+            }
+
+//////////////////////////end testing
             myView.delete.setOnClickListener {
                 val dbManager = DbManager(this.context!!)
                 val nbr = dbManager.delete("ID=?", selectionArgs)
