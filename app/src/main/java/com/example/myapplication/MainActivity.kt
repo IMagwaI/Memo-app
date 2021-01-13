@@ -53,13 +53,14 @@ class MainActivity : AppCompatActivity() {
                 val description = cursor.getString(cursor.getColumnIndex("description"))
                 val date = cursor.getString(3)
 
-                println("data = "+id.toString()+" "+ title+" "+description+" "+date)
+                println("data = $id $title $description $date")
 
                 listNotes.add(Note(id, title, description,date))
 
             } while (cursor.moveToNext())
         }
         cursor.close()
+        dbManager.sqlDB?.close()
         var myAdapter = MyNoteAdapter(this, listNotes)
         myList.adapter = myAdapter
     }
