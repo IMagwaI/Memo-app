@@ -8,11 +8,11 @@ class NotificationSchedule (var context: Context, var params: WorkerParameters) 
 
     override fun doWork(): Result {
         val data = params.inputData
-        val title = data.getString("title")
+        val title = "title"
         val body = data.getString("body")
 
         if (body != null) {
-            TriggerNotification(context, title!!, body)
+            TriggerNotification(context, title, body)
         }
 
         return Result.success()

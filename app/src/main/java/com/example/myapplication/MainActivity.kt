@@ -24,44 +24,12 @@ import kotlinx.android.synthetic.main.noteticket.view.*
 /**
  * This is the MainActivity that show all saved notes
  */
-class MainActivity : AppCompatActivity() {
-    private var dl: DrawerLayout? = null
-    private var t: ActionBarDrawerToggle? = null
-    private var nv: NavigationView? = null
+class MainActivity : BaseActivity() {
 
     var listNotes = ArrayList<Note>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        //DrawerLayout
-        dl = findViewById(R.id.drawer_layout)
-        t = ActionBarDrawerToggle(this, dl,  R.string.drawer_open, R.string.drawer_close)
-        supportActionBar?.setDisplayShowTitleEnabled(true);
-        supportActionBar?.setHomeButtonEnabled(true);
-        supportActionBar?.setDisplayHomeAsUpEnabled(true);
-        dl?.addDrawerListener(t!!)
-        t?.syncState()
-
-        nv = findViewById(R.id.navigation_view)
-        var intent_calendar =Intent(this, CalendarActivity::class.java)
-        var intent_add_note=Intent(this, AddActivity::class.java)
-        var intent_note=Intent(this, MainActivity::class.java)
-        nv?.setNavigationItemSelectedListener(NavigationView.OnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_note -> this.startActivity(intent_note)
-                R.id.nav_calendar -> this.startActivity(intent_calendar)
-                R.id.nav_trash -> Toast.makeText(this, "Trash", Toast.LENGTH_SHORT).show()
-                R.id.nav_add_note -> this.startActivity(intent_add_note)
-
-                else -> return@OnNavigationItemSelectedListener true
-            }
-            true
-        })
-    }
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (t?.onOptionsItemSelected(item) == true) {
-            true
-        } else super.onOptionsItemSelected(item!!)
     }
 
     /**
@@ -105,7 +73,7 @@ class MainActivity : AppCompatActivity() {
 
     fun searchBar(search: String) {
         var dbManager = DbManager(this)
-        val projections = arrayOf("ID", "title", "description", "date")
+        val projections = arrayOf("ID", "title", "description", "date", "reminderdate")
         val selectionArgs = arrayOf(search)
         var cursor = dbManager.query(projections, "title like ?", selectionArgs, "date" + " DESC")
         if (cursor.moveToFirst()) {

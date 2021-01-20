@@ -30,45 +30,19 @@ import kotlinx.android.synthetic.main.activity_add.*
  * actualy we ve only the AddTextNoteFragment
  * later we could use another fragments to add voice or draw
  */
-class AddActivity : AppCompatActivity(){
+class AddActivity : BaseActivity() {
     lateinit var tabLayout: TabLayout
     lateinit var viewPager: ViewPager
-    private var dl: DrawerLayout? = null
-    private var t: ActionBarDrawerToggle? = null
-    private var nv: NavigationView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add)
-        idNote = intent.getIntExtra("id",0)
-        if(idNote!! >0) {
+        idNote = intent.getIntExtra("id", 0)
+        if (idNote!! > 0) {
             titleNote = intent.getStringExtra("title")
             descriptionNote = intent.getStringExtra("description")
         }
-        //Drawer Layout
-        dl = findViewById(R.id.drawer_layout)
-        t = ActionBarDrawerToggle(this, dl,  R.string.drawer_open, R.string.drawer_close)
-        supportActionBar?.setDisplayShowTitleEnabled(true);
-        supportActionBar?.setHomeButtonEnabled(true);
-        supportActionBar?.setDisplayHomeAsUpEnabled(true);
-        dl?.addDrawerListener(t!!)
-        t?.syncState()
 
-        nv = findViewById(R.id.navigation_view)
-        var intent_calendar = Intent(this, CalendarActivity::class.java)
-        var intent_add_note= Intent(this, AddActivity::class.java)
-        var intent_note= Intent(this, MainActivity::class.java)
-        nv?.setNavigationItemSelectedListener(NavigationView.OnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_note -> this.startActivity(intent_note)
-                R.id.nav_calendar -> this.startActivity(intent_calendar)
-                R.id.nav_trash -> Toast.makeText(this, "Trash", Toast.LENGTH_SHORT).show()
-                R.id.nav_add_note -> this.startActivity(intent_add_note)
-                else -> return@OnNavigationItemSelectedListener true
-            }
-            true
-        })
-        //fin drawer layout
 
         title = "The memo"
         tabLayout = findViewById(R.id.tabLayout)
@@ -78,25 +52,21 @@ class AddActivity : AppCompatActivity(){
         tabLayout.addTab(tabLayout.newTab().setIcon(R.mipmap.pencil))
         tabLayout.tabGravity = TabLayout.GRAVITY_FILL
 
-        val adapter = MyAdapter(this, supportFragmentManager,
-            tabLayout.tabCount)
+        val adapter = MyAdapter(
+            this, supportFragmentManager,
+            tabLayout.tabCount
+        )
         viewPager.adapter = adapter
         viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 viewPager.currentItem = tab.position
             }
+
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
 
-    }
-
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (t?.onOptionsItemSelected(item) == true) {
-            true
-        } else super.onOptionsItemSelected(item!!)
     }
 }

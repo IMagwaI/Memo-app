@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:background="@color/gray">
-
         <ListView
             android:id="@+id/myList"
             android:layout_width="fill_parent"
@@ -23,5 +22,4 @@
         android:layout_marginBottom="27dp"
         android:clickable="true"
         android:src="@android:drawable/ic_input_add" />
-<include layout="@layout/base_activity"/>
 </RelativeLayout>
