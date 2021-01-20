@@ -30,7 +30,9 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
     }
+   
 
     /**
      * get data after each activity onStart callback
@@ -157,6 +159,7 @@ class MainActivity : BaseActivity() {
 
 //////////////////////////end testing
             myView.delete.setOnClickListener {
+                Toast.makeText(this.context, "working", Toast.LENGTH_LONG).show()
                 val dbManager = DbManager(this.context!!)
                 val nbr = dbManager.delete("ID=?", selectionArgs)
                 if (nbr > 0)
