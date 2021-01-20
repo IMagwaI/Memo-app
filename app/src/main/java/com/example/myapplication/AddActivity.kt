@@ -45,30 +45,30 @@ class AddActivity : AppCompatActivity(){
             titleNote = intent.getStringExtra("title")
             descriptionNote = intent.getStringExtra("description")
         }
-        //Drawer Layout
-        dl = findViewById(R.id.drawer_layout)
-        t = ActionBarDrawerToggle(this, dl,  R.string.drawer_open, R.string.drawer_close)
-        supportActionBar?.setDisplayShowTitleEnabled(true);
-        supportActionBar?.setHomeButtonEnabled(true);
-        supportActionBar?.setDisplayHomeAsUpEnabled(true);
-        dl?.addDrawerListener(t!!)
-        t?.syncState()
-
-        nv = findViewById(R.id.navigation_view)
-        var intent_calendar = Intent(this, CalendarActivity::class.java)
-        var intent_add_note= Intent(this, AddActivity::class.java)
-        var intent_note= Intent(this, MainActivity::class.java)
-        nv?.setNavigationItemSelectedListener(NavigationView.OnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_note -> this.startActivity(intent_note)
-                R.id.nav_calendar -> this.startActivity(intent_calendar)
-                R.id.nav_trash -> Toast.makeText(this, "Trash", Toast.LENGTH_SHORT).show()
-                R.id.nav_add_note -> this.startActivity(intent_add_note)
-                else -> return@OnNavigationItemSelectedListener true
-            }
-            true
-        })
-        //fin drawer layout
+//        //Drawer Layout
+//        dl = findViewById(R.id.drawer_layout)
+//        t = ActionBarDrawerToggle(this, dl,  R.string.drawer_open, R.string.drawer_close)
+//        supportActionBar?.setDisplayShowTitleEnabled(true);
+//        supportActionBar?.setHomeButtonEnabled(true);
+//        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+//        dl?.addDrawerListener(t!!)
+//        t?.syncState()
+//
+//        nv = findViewById(R.id.navigation_view)
+//        var intent_calendar = Intent(this, CalendarActivity::class.java)
+//        var intent_add_note= Intent(this, AddActivity::class.java)
+//        var intent_note= Intent(this, MainActivity::class.java)
+//        nv?.setNavigationItemSelectedListener(NavigationView.OnNavigationItemSelectedListener { item ->
+//            when (item.itemId) {
+//                R.id.nav_note -> this.startActivity(intent_note)
+//                R.id.nav_calendar -> this.startActivity(intent_calendar)
+//                R.id.nav_trash -> Toast.makeText(this, "Trash", Toast.LENGTH_SHORT).show()
+//                R.id.nav_add_note -> this.startActivity(intent_add_note)
+//                else -> return@OnNavigationItemSelectedListener true
+//            }
+//            true
+//        })
+//        //fin drawer layout
 
         title = "The memo"
         tabLayout = findViewById(R.id.tabLayout)

@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         var intent_note=Intent(this, MainActivity::class.java)
         nv?.setNavigationItemSelectedListener(NavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_note -> this.startActivity(intent_note)
+                R.id.nav_note -> {this.startActivity(intent_note)}
                 R.id.nav_calendar -> this.startActivity(intent_calendar)
                 R.id.nav_trash -> Toast.makeText(this, "Trash", Toast.LENGTH_SHORT).show()
                 R.id.nav_add_note -> this.startActivity(intent_add_note)
@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity() {
 
     fun searchBar(search: String) {
         var dbManager = DbManager(this)
-        val projections = arrayOf("ID", "title", "description", "date")
+        val projections = arrayOf("ID", "title", "description", "date", "reminderdate")
         val selectionArgs = arrayOf(search)
         var cursor = dbManager.query(projections, "title like ?", selectionArgs, "date" + " DESC")
         if (cursor.moveToFirst()) {
@@ -189,6 +189,7 @@ class MainActivity : AppCompatActivity() {
 
 //////////////////////////end testing
             myView.delete.setOnClickListener {
+                Toast.makeText(this.context, "working", Toast.LENGTH_LONG).show()
                 val dbManager = DbManager(this.context!!)
                 val nbr = dbManager.delete("ID=?", selectionArgs)
                 if (nbr > 0)
