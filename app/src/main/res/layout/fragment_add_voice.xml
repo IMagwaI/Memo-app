@@ -58,5 +58,28 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
         android:text="click here to start recording" />
+    <Switch
+        android:id="@+id/switch1"
+        android:layout_width="208dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="400dp"
+        android:switchMinWidth="56dp"
+        android:text="Set a reminder:"
+        android:textOff="OFF"
+        android:textOn="ON" />
+
+    <TextView
+        android:id="@+id/textReminder"
+        android:layout_width="196dp"
+        android:layout_height="43dp"
+        android:layout_above="@+id/saveButton"
+        android:layout_below="@+id/switch1"
+        android:layout_marginLeft="170dp"
+        android:layout_marginTop="34dp"
+        android:layout_marginBottom="51dp"
+        android:clickable="true"
+        android:hint="Date et heure"
+        android:inputType="none" />
 
 </RelativeLayout>

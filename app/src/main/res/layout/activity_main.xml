@@ -23,4 +23,5 @@
         android:layout_marginBottom="27dp"
         android:clickable="true"
         android:src="@android:drawable/ic_input_add" />
+<include layout="@layout/base_activity"/>
 </RelativeLayout>

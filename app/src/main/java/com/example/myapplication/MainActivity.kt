@@ -5,15 +5,19 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.beans.Note
 import com.example.myapplication.localdb.DbManager
+import com.google.android.material.navigation.NavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.noteticket.view.*
 
@@ -21,16 +25,47 @@ import kotlinx.android.synthetic.main.noteticket.view.*
  * This is the MainActivity that show all saved notes
  */
 class MainActivity : AppCompatActivity() {
+    private var dl: DrawerLayout? = null
+    private var t: ActionBarDrawerToggle? = null
+    private var nv: NavigationView? = null
+
     var listNotes = ArrayList<Note>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        //DrawerLayout
+        dl = findViewById(R.id.drawer_layout)
+        t = ActionBarDrawerToggle(this, dl,  R.string.drawer_open, R.string.drawer_close)
+        supportActionBar?.setDisplayShowTitleEnabled(true);
+        supportActionBar?.setHomeButtonEnabled(true);
+        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        dl?.addDrawerListener(t!!)
+        t?.syncState()
 
+        nv = findViewById(R.id.navigation_view)
+        var intent_calendar =Intent(this, CalendarActivity::class.java)
+        var intent_add_note=Intent(this, AddActivity::class.java)
+        var intent_note=Intent(this, MainActivity::class.java)
+        nv?.setNavigationItemSelectedListener(NavigationView.OnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_note -> this.startActivity(intent_note)
+                R.id.nav_calendar -> this.startActivity(intent_calendar)
+                R.id.nav_trash -> Toast.makeText(this, "Trash", Toast.LENGTH_SHORT).show()
+                R.id.nav_add_note -> this.startActivity(intent_add_note)
 
+                else -> return@OnNavigationItemSelectedListener true
+            }
+            true
+        })
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (t?.onOptionsItemSelected(item) == true) {
+            true
+        } else super.onOptionsItemSelected(item!!)
     }
 
     /**
-     * get data after each acticity onStart callback
+     * get data after each activity onStart callback
      */
     override fun onStart() {
         super.onStart()
@@ -80,7 +115,8 @@ class MainActivity : AppCompatActivity() {
                 val title = cursor.getString(cursor.getColumnIndex("title"))
                 val description = cursor.getString(cursor.getColumnIndex("description"))
                 val date = cursor.getString(3)
-                listNotes.add(Note(id, title, description, date))
+                val reminderdate=cursor.getString(cursor.getColumnIndex("reminderdate"))
+                listNotes.add(Note(id, title, description, date,reminderdate))
             } while (cursor.moveToNext())
         }
         cursor.close()
@@ -91,7 +127,7 @@ class MainActivity : AppCompatActivity() {
 
     fun querySearch(search: String) {
         var dbManager = DbManager(this)
-        val projections = arrayOf("ID", "title", "description", "date")
+        val projections = arrayOf("ID", "title", "description", "date", "reminderdate")
         val selectionArgs = arrayOf(search)
         var cursor = dbManager.query(projections, "ID like ?", selectionArgs, "date" + " DESC")
         if (cursor.moveToFirst()) {
@@ -101,10 +137,11 @@ class MainActivity : AppCompatActivity() {
                 val title = cursor.getString(cursor.getColumnIndex("title"))
                 val description = cursor.getString(cursor.getColumnIndex("description"))
                 val date = cursor.getString(3)
+                val reminderDate=cursor.getString(cursor.getColumnIndex("reminderdate"))
 
-                println("data = " + id.toString() + " " + title + " " + description + " " + date)
+                println("data = " + id.toString() + " " + title + " " + description + " " + date+" "+reminderDate)
 
-                listNotes.add(Note(id, title, description, date))
+                listNotes.add(Note(id, title, description, date,reminderDate))
 
             } while (cursor.moveToNext())
         }
@@ -161,6 +198,8 @@ class MainActivity : AppCompatActivity() {
             myView.modify.setOnClickListener {
                 goToUpdate(note)
             }
+            if(note.reminderdate!="null")
+                myView.reminder.visibility=View.VISIBLE
             return myView
         }
 

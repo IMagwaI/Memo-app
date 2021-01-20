@@ -1,13 +1,29 @@
 package com.example.myapplication
 
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
+import android.content.Intent
+import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
+import android.os.Build
 import android.os.Bundle
+import android.text.format.DateFormat
+import android.view.MenuItem
+import android.widget.DatePicker
+import android.widget.TimePicker
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager.widget.ViewPager
 import com.example.myapplication.fragments.descriptionNote
 import com.example.myapplication.fragments.idNote
 import com.example.myapplication.fragments.titleNote
 import com.example.myapplication.tabview.MyAdapter
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
+import kotlinx.android.synthetic.main.activity_add.*
 
 /**
  * This activity may contain multiple fragments
@@ -17,14 +33,43 @@ import com.google.android.material.tabs.TabLayout
 class AddActivity : AppCompatActivity(){
     lateinit var tabLayout: TabLayout
     lateinit var viewPager: ViewPager
+    private var dl: DrawerLayout? = null
+    private var t: ActionBarDrawerToggle? = null
+    private var nv: NavigationView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_add)
         idNote = intent.getIntExtra("id",0)
         if(idNote!! >0) {
             titleNote = intent.getStringExtra("title")
             descriptionNote = intent.getStringExtra("description")
         }
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add)
+        //Drawer Layout
+        dl = findViewById(R.id.drawer_layout)
+        t = ActionBarDrawerToggle(this, dl,  R.string.drawer_open, R.string.drawer_close)
+        supportActionBar?.setDisplayShowTitleEnabled(true);
+        supportActionBar?.setHomeButtonEnabled(true);
+        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        dl?.addDrawerListener(t!!)
+        t?.syncState()
+
+        nv = findViewById(R.id.navigation_view)
+        var intent_calendar = Intent(this, CalendarActivity::class.java)
+        var intent_add_note= Intent(this, AddActivity::class.java)
+        var intent_note= Intent(this, MainActivity::class.java)
+        nv?.setNavigationItemSelectedListener(NavigationView.OnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_note -> this.startActivity(intent_note)
+                R.id.nav_calendar -> this.startActivity(intent_calendar)
+                R.id.nav_trash -> Toast.makeText(this, "Trash", Toast.LENGTH_SHORT).show()
+                R.id.nav_add_note -> this.startActivity(intent_add_note)
+                else -> return@OnNavigationItemSelectedListener true
+            }
+            true
+        })
+        //fin drawer layout
+
         title = "The memo"
         tabLayout = findViewById(R.id.tabLayout)
         viewPager = findViewById(R.id.viewPager)
@@ -44,5 +89,14 @@ class AddActivity : AppCompatActivity(){
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
+
+
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (t?.onOptionsItemSelected(item) == true) {
+            true
+        } else super.onOptionsItemSelected(item!!)
     }
 }

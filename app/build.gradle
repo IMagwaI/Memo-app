@@ -38,8 +38,14 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'com.android.support:design:+'
+    implementation 'androidx.multidex:multidex:2.0.1'
     //color picker
     implementation "dev.sasikanth:colorsheet:1.0.1"
+    //calendar
+    implementation 'com.applandeo:material-calendar-view:1.9.0-rc03'
+    //notification
+    implementation 'android.arch.work:work-runtime-ktx:1.0.1'
+
 
 
 

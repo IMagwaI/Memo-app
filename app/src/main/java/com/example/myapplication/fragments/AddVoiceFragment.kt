@@ -1,25 +1,54 @@
 package com.example.myapplication.fragments
 
 import android.app.Activity
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.ContentValues
 import android.content.Intent
+import android.icu.util.Calendar
+import android.os.Build
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
+import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.DatePicker
+import android.widget.TimePicker
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.work.Constraints
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.myapplication.R
 import com.example.myapplication.localdb.DbManager
+import com.example.myapplication.notif.NotificationSchedule
+import kotlinx.android.synthetic.main.fragment_add_draw.*
 import kotlinx.android.synthetic.main.fragment_add_voice.*
+import kotlinx.android.synthetic.main.fragment_add_voice.save
+import kotlinx.android.synthetic.main.fragment_add_voice.switch1
+import kotlinx.android.synthetic.main.fragment_add_voice.textReminder
 import java.util.*
 import kotlin.collections.ArrayList
 
 
-class AddVoiceFragment : Fragment() {
+class AddVoiceFragment : Fragment(), DatePickerDialog.OnDateSetListener,
+    TimePickerDialog.OnTimeSetListener {
     private val RQ_SPEECH_REC=102
+    var day = 0
+    var month: Int = 0
+    var year: Int = 0
+    var hour: Int = 0
+    var minute: Int = 0
+    var myDay = 0
+    var myMonth: Int = 0
+    var myYear: Int = 0
+    var myHour: Int = 0
+    var myMinute: Int = 0
+    var reminderDate: Date? =null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,12 +58,31 @@ class AddVoiceFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_add_voice, container, false)
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
         record.setOnClickListener{
             askSpeechInput()
         }
 
+        switch1?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                //DatePicker
+                //TimePicker
+                val calendar: Calendar = Calendar.getInstance()
+                day = calendar.get(Calendar.DAY_OF_MONTH)
+                month = calendar.get(Calendar.MONTH)
+                year = calendar.get(Calendar.YEAR)
+                val datePickerDialog =
+                    DatePickerDialog(this.context!!, this, year, month,day)
+                datePickerDialog.show()
+                textReminder.visibility=View.VISIBLE
+            } else {
+                //DeleteNotification
+                textReminder.visibility=View.INVISIBLE
+                reminderDate=null
+            }
+        }
         save.setOnClickListener {
             addNote()
         }
@@ -61,12 +109,50 @@ class AddVoiceFragment : Fragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
+    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+        myDay = day
+        myYear = year
+        myMonth = month
+        val calendar: Calendar = Calendar.getInstance()
+        hour = calendar.get(Calendar.HOUR)
+        minute = calendar.get(Calendar.MINUTE)
+        val timePickerDialog = TimePickerDialog(this.context, this, hour, minute,
+            DateFormat.is24HourFormat(this.context))
+        timePickerDialog.show()
+    }
+    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
+        myHour = hourOfDay
+        myMinute = minute
+        textReminder.text = " "+myYear + "/" + myMonth + "/" + myDay + "at "  + myHour + ":"  + myMinute
+        reminderDate = Date(myYear, myMonth, myDay, myHour, myMinute)
+    }
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun scheduleNotification(timeDelay: Long, tag: String, body: String) {
+
+        val data = Data.Builder().putString("body", body)
+
+        val work = OneTimeWorkRequestBuilder<NotificationSchedule>()
+            .setInitialDelay(timeDelay, java.util.concurrent.TimeUnit.SECONDS)
+            .setConstraints(
+                Constraints.Builder().setTriggerContentMaxDelay(1,
+                java.util.concurrent.TimeUnit.SECONDS
+            ).build()) // API Level 24
+            .setInputData(data.build())
+            .addTag(tag)
+            .build()
+
+        WorkManager.getInstance().enqueue(work)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
     fun addNote(){
         var title:String?=title.text.toString()
         var note:String?=textDisplay.text.toString()
         val values= ContentValues()
         values.put("title",title)
         values.put("description",note)
+        values.put("reminderdate", reminderDate.toString())
         val dbManager= DbManager(this.requireActivity())
         if(idNote!=0&&idNote!=null){
             val selectionArgs= arrayOf(idNote.toString())
@@ -80,7 +166,11 @@ class AddVoiceFragment : Fragment() {
                 Toast.makeText(this.requireContext(),"added to database",Toast.LENGTH_LONG).show()
 
         }
-
+        if (reminderDate.toString()!="null"){
+            var delay:Long= Math.abs(System.currentTimeMillis() - reminderDate!!.time)
+            println("this is delay"+delay)
+            scheduleNotification(delay/1000,title!!,note!!)
+        }
 
     }
 }
