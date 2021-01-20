@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view"
+    >
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_note"
+            android:icon="@drawable/ic_notes"
+            android:title="Notes" />
+        <item
+            android:id="@+id/nav_add_note"
+            android:icon="@drawable/ic_note_add"
+            android:title="Add a Note" />
+        <item
+            android:id="@+id/nav_calendar"
+            android:icon="@drawable/ic_calendar"
+            android:title="Calendar" />
+        <item
+            android:id="@+id/nav_trash"
+            android:icon="@drawable/ic_trash"
+            android:title="Corbeille" />
+    </group>
+
+    <item android:title="Autres">
+        <menu>
+            <item
+                android:id="@+id/nav_help"
+                android:icon="@drawable/ic_help"
+                android:title="Help" />
+            <item
+                android:id="@+id/nav_AboutUs"
+                android:icon="@drawable/ic_about_us"
+                android:title="About Us" />
+            <item
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_settings"
+                android:title="Settings" />
+        </menu>
+    </item>
+
+</menu>

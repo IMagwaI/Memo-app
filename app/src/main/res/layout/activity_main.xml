@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:background="@color/gray">
-
         <ListView
             android:id="@+id/myList"
             android:layout_width="fill_parent"

@@ -27,4 +27,27 @@
             android:layout_height="wrap_content"
             app:srcCompat="@android:drawable/ic_menu_save" />
     </LinearLayout>
+    <Switch
+        android:id="@+id/switch1"
+        android:layout_width="208dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="400dp"
+        android:switchMinWidth="56dp"
+        android:text="Set a reminder:"
+        android:textOff="OFF"
+        android:textOn="ON" />
+
+    <TextView
+        android:id="@+id/textReminder"
+        android:layout_width="159dp"
+        android:layout_height="40dp"
+        android:layout_above="@+id/saveButton"
+        android:layout_below="@+id/switch1"
+        android:layout_marginLeft="170dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="51dp"
+        android:clickable="true"
+        android:hint="Date et heure"
+        android:inputType="none" />
 </RelativeLayout>
