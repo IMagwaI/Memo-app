@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        app:srcCompat="@mipmap/google" />
+
+    <ImageButton
+        android:id="@+id/upload"
+        android:layout_width="78dp"
+        android:layout_height="69dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="260dp"
+        android:background="@mipmap/upload"
+        android:text="upload" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="267dp"
+        android:layout_height="47dp"
+        android:layout_above="@+id/upload"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="80dp"
+        android:text="Upload your saved data "
+        android:textColor="#100101"
+        android:textSize="24sp" />
+</RelativeLayout>

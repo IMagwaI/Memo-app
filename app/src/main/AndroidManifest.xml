@@ -18,6 +18,9 @@
         <activity android:name=".AddActivity"/>
         <activity android:name=".CalendarActivity"/>
         <activity android:name=".BaseActivity"/>
+        <activity android:name=".firebase.OnlineDBActivity"/>
+        <activity android:name=".firebase.LoginActivity"/>
+
     </application>
 
 </manifest>

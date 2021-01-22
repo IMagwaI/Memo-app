@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "34402196657",
+    "project_id": "speechrecognitionnote",
+    "storage_bucket": "speechrecognitionnote.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:34402196657:android:7abdc9162626c9940b1690",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "34402196657-onggn4hj92h9sur9eb62f1p5sprqg43c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8npUCKjoBT_RszdZ8r6tuPTbfCUrzSws"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "34402196657-onggn4hj92h9sur9eb62f1p5sprqg43c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

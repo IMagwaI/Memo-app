@@ -20,6 +20,10 @@
             android:id="@+id/nav_trash"
             android:icon="@drawable/ic_trash"
             android:title="Corbeille" />
+        <item
+            android:id="@+id/nav_sync"
+            android:icon="@drawable/googleg_standard_color_18"
+            android:title="Sync with google" />
     </group>
 
     <item android:title="Autres">

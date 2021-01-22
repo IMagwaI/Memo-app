@@ -146,7 +146,11 @@ class AddDrawFragment : Fragment() , DatePickerDialog.OnDateSetListener,
         values.put("title", title)
         values.put("description", note)
         values.put("img", img)
-        values.put("reminderdate", reminderDate.toString())
+        try {
+            values.put("reminderdate", reminderDate.toString())
+        }catch (e:Exception) {
+            values.put("reminderdate", "null")
+        }
         val dbManager = DbManager(this.requireContext())
         val id = dbManager.insertNote(values)
 

@@ -14,6 +14,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
+import com.example.myapplication.firebase.LoginActivity
 import com.google.android.material.navigation.NavigationView
 
 
@@ -66,11 +67,14 @@ open class BaseActivity : AppCompatActivity() {
             val intent_calendar = Intent(this, CalendarActivity::class.java)
             val intent_add_note = Intent(this, AddActivity::class.java)
             val intent_note = Intent(this, MainActivity::class.java)
+            val intent_login = Intent(this, LoginActivity::class.java)
+
             when (menuItem.itemId) {
                 R.id.nav_note -> this.startActivity(intent_note)
                 R.id.nav_calendar -> this.startActivity(intent_calendar)
                 R.id.nav_trash -> Toast.makeText(this, "Trash", Toast.LENGTH_SHORT).show()
                 R.id.nav_add_note -> this.startActivity(intent_add_note)
+                R.id.nav_sync-> this.startActivity(intent_login)
                 else -> return@OnNavigationItemSelectedListener true
             }
             false
