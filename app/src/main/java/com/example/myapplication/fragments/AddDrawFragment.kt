@@ -43,7 +43,7 @@ class AddDrawFragment : Fragment() , DatePickerDialog.OnDateSetListener,
     var myYear: Int = 0
     var myHour: Int = 0
     var myMinute: Int = 0
-    lateinit var reminderDate: Date
+    var reminderDate: Date?=null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -134,7 +134,7 @@ class AddDrawFragment : Fragment() , DatePickerDialog.OnDateSetListener,
 
     @RequiresApi(Build.VERSION_CODES.N)
     private fun addNote() {
-        val title: String = "Draw"
+        val title: String = "Draw ("+extraBitmap.generationId.toString()+")"
         val note: String = "This is a drawing note, press edit button to display it"
         val bitmap: Bitmap = extraBitmap
 

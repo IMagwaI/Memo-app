@@ -110,10 +110,8 @@ class MainActivity : BaseActivity() {
                 val reminderDate=cursor.getString(cursor.getColumnIndex("reminderdate"))
 
                 println("data = " + id.toString() + " " + title + " " + description + " " + date+" "+reminderDate)
-                if(reminderDate==null)
-                    listNotes.add(Note(id, title, description, date,""))
-                else
-                    listNotes.add(Note(id, title, description, date,reminderDate))
+
+                listNotes.add(Note(id, title, description, date,reminderDate))
 
             } while (cursor.moveToNext())
         }
@@ -161,11 +159,11 @@ class MainActivity : BaseActivity() {
 
 //////////////////////////end testing
             myView.delete.setOnClickListener {
-                Toast.makeText(this.context, "working", Toast.LENGTH_LONG).show()
+                Toast.makeText(this.context, "working", Toast.LENGTH_SHORT).show()
                 val dbManager = DbManager(this.context!!)
                 val nbr = dbManager.delete("ID=?", selectionArgs)
                 if (nbr > 0)
-                    Toast.makeText(this.context, "note deleted", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this.context, "note deleted", Toast.LENGTH_SHORT).show()
                 querySearch("%")
             }
             myView.modify.setOnClickListener {

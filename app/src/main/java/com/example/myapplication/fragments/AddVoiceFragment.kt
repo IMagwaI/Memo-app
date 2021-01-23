@@ -98,7 +98,7 @@ class AddVoiceFragment : Fragment(), DatePickerDialog.OnDateSetListener,
     }
     private fun askSpeechInput(){
         if(!SpeechRecognizer.isRecognitionAvailable(this.requireContext())){
-            Toast.makeText(this.requireContext(),"Speech recognitionis not available",Toast.LENGTH_SHORT).show()
+            Toast.makeText(this.requireContext(),"Speech recognition is not available, you must activate google app",Toast.LENGTH_SHORT).show()
         }else{
            val i = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
             i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
