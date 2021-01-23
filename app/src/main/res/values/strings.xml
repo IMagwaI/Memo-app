@@ -2,4 +2,9 @@
     <string name="app_name">The memo</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="memo">memos</string>
+    <string name="add_memo">Add</string>
+    <string name="view_memo">View</string>
 </resources>

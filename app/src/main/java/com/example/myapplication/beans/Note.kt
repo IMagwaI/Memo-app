@@ -9,13 +9,12 @@ class Note {
     var date: String? = null
     var reminderdate: String ?=null
 
-    constructor(nodeID:Int,nodeName:String,nodeDesc:String,date: String, reminderdate:String){
+    constructor(nodeID:Int,nodeName:String,nodeDesc:String,date: String, reminderdate:String ){
         this.id=nodeID
         this.title=nodeName
         this.description=nodeDesc
         this.date=date
         this.reminderdate=reminderdate
-
     }
 
 }
