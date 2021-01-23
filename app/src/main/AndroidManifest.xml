@@ -9,18 +9,28 @@
         android:roundIcon="@mipmap/mylogofinal"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <receiver android:name=".NewAppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/new_app_widget_info" />
+        </receiver>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddActivity"/>
-        <activity android:name=".CalendarActivity"/>
-        <activity android:name=".BaseActivity"/>
         <activity android:name=".firebase.OnlineDBActivity"/>
         <activity android:name=".firebase.LoginActivity"/>
-
+        <activity android:name=".AddActivity" />
+        <activity android:name=".CalendarActivity" />
+        <activity android:name=".BaseActivity" />
     </application>
 
 </manifest>

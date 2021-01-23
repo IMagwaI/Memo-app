@@ -42,28 +42,32 @@ class DbManager(context: Context) {
 
     }
 
-    fun insertNote(values:ContentValues):Long{
-        val id=sqlDB!!.insert(dbTable,"",values)
+    fun insertNote(values: ContentValues):Long{
+        val id=sqlDB!!.insert(dbTable, "", values)
         return id
     }
 
-    fun query(projection:Array<String>,selection:String,selectionArgs:Array<String>,sortOrder:String):Cursor{
+    fun query(
+        projection: Array<String>,
+        selection: String,
+        selectionArgs: Array<String>,
+        sortOrder: String
+    ):Cursor{
         //sqlDB!!.execSQL("drop table if exists $dbTable")
         //sqlDB!!.execSQL(sqlCreateTable)
         val db= SQLiteQueryBuilder()
         db.tables=dbTable
-        val cursor=db.query(sqlDB,projection,selection,selectionArgs,null,null,sortOrder)
+        val cursor=db.query(sqlDB, projection, selection, selectionArgs, null, null, sortOrder)
         return cursor
     }
 
-    fun delete(selection: String,selectionArgs: Array<String>):Int{
-        val nbr=sqlDB!!.delete(dbTable,selection,selectionArgs)
+    fun delete(selection: String, selectionArgs: Array<String>):Int{
+        val nbr=sqlDB!!.delete(dbTable, selection, selectionArgs)
         return nbr
     }
 
-    fun update( values: ContentValues,selection: String,selectionArgs: Array<String>):Int{
-        val nbr =sqlDB!!.update(dbTable,values,selection,selectionArgs)
+    fun update(values: ContentValues, selection: String, selectionArgs: Array<String>):Int{
+        val nbr =sqlDB!!.update(dbTable, values, selection, selectionArgs)
         return nbr
     }
-
 }

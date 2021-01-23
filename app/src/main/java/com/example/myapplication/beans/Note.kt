@@ -11,13 +11,12 @@ class Note {
     var img:ByteArray?=null
     var imgS:String?=null
 
-    constructor(nodeID:Int,nodeName:String,nodeDesc:String,date: String, reminderdate:String){
+    constructor(nodeID:Int,nodeName:String,nodeDesc:String,date: String, reminderdate:String ){
         this.id=nodeID
         this.title=nodeName
         this.description=nodeDesc
         this.date=date
         this.reminderdate=reminderdate
-
     }
 
     constructor(nodeID:Int,nodeName:String,nodeDesc:String,date: String,img:ByteArray, reminderdate:String){
