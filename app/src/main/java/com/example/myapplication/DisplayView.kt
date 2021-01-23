@@ -7,11 +7,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import androidx.core.content.res.ResourcesCompat
-import com.example.myapplication.R
 
-/**
- * check PaintView.kt
- */
+
 private lateinit var extraCanvas: Canvas
 lateinit var extraBitmapDisplay: Bitmap
 private const val STROKE_WIDTH = 12f // has to be float
@@ -32,8 +29,6 @@ class DisplayView(context: Context?, attrs: AttributeSet?) : View(context, attrs
         strokeWidth = STROKE_WIDTH // default: Hairline-width (really thin)
 
     }
-    private var path = Path()
-
 
     override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {
         super.onSizeChanged(width, height, oldWidth, oldHeight)

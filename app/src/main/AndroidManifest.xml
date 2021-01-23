@@ -31,6 +31,8 @@
         <activity android:name=".AddActivity" />
         <activity android:name=".CalendarActivity" />
         <activity android:name=".BaseActivity" />
+        <activity android:name=".DrawShowActivity" />
+
     </application>
 
 </manifest>

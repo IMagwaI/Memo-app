@@ -109,7 +109,7 @@ class MainActivity : BaseActivity() {
 
     fun querySearch(search: String) {
         var dbManager = DbManager(this)
-        val projections = arrayOf("ID", "title", "description", "date", "reminderdate")
+        val projections = arrayOf("ID", "title", "description", "date", "reminderdate","img")
         val selectionArgs = arrayOf(search)
         var cursor = dbManager.query(projections, "ID like ?", selectionArgs, "date" + " DESC")
         var countmemos: Int = cursor.getCount()
@@ -126,10 +126,14 @@ class MainActivity : BaseActivity() {
                 val description = cursor.getString(cursor.getColumnIndex("description"))
                 val date = cursor.getString(3)
                 val reminderDate = cursor.getString(cursor.getColumnIndex("reminderdate"))
+                val img = cursor.getBlob(cursor.getColumnIndex("img"))
 
                 println("data = " + id.toString() + " " + title + " " + description + " " + date + " " + reminderDate)
-
-                listNotes.add(Note(id, title, description, date, reminderDate))
+                try {
+                    listNotes.add(Note(id, title, description, date,img,reminderDate))
+                }catch (e:Exception){
+                    listNotes.add(Note(id, title, description, date, reminderDate))
+                }
 
             } while (cursor.moveToNext())
         }
@@ -209,6 +213,15 @@ class MainActivity : BaseActivity() {
 
 
                 if (note.description == "This is a drawing note, press edit button to display it") {
+
+                    val intent = Intent(this.context, DrawShowActivity::class.java)
+                    intent.putExtra("id", note.id!!)
+                    intent.putExtra("title", note.title)
+                    intent.putExtra("description", note.description)
+                    intent.putExtra("img", note.img)
+
+                    startActivity(intent)
+
 //                    builder.setTitle("This is a draw memo")
 
 //                    val c = db.rawQuery("select * from img", null)
