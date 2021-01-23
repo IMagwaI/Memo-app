@@ -196,10 +196,11 @@ class MainActivity : BaseActivity() {
 
 //////////////////////////end testing
             myView.delete.setOnClickListener {
+                Toast.makeText(this.context, "working", Toast.LENGTH_SHORT).show()
                 val dbManager = DbManager(this.context!!)
                 val nbr = dbManager.delete("ID=?", selectionArgs)
                 if (nbr > 0)
-                    Toast.makeText(this.context, "note deleted", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this.context, "note deleted", Toast.LENGTH_SHORT).show()
                 querySearch("%")
             }
 
