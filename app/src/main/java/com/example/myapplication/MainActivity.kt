@@ -175,8 +175,14 @@ class MainActivity : BaseActivity() {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             val myView = layoutInflater.inflate(R.layout.noteticket, null)
             val note = listNotesAdapter[position]
+            if(note.description == "This is a drawing note, press edit button to display it"){
+                myView.note_img.setImageResource(R.drawable.draw_icon)
+            }
             myView.textTitle.text = note.title
-            myView.textView.text = note.description
+            if(note.description?.length!! > 60){
+                myView.textView.text = note.description?.take(60) + "..."
+            }else{
+            myView.textView.text = note.description}
             myView.date.text = note.date
             val selectionArgs = arrayOf(note.id.toString())
             val dbManager = DbManager(this.context!!)
@@ -238,7 +244,7 @@ class MainActivity : BaseActivity() {
 
 //                    dialogBuilder.setView(R.layout.custum_dialog)
 
-                    dialogBuilder.setIcon(R.drawable.garfield)
+                    dialogBuilder.setIcon(R.drawable.writing_note_ready)
 //                    titleNote.text = Editable.Factory.getInstance().newEditable(note.title)
 //                    titleNote.setText(note.title)
 //                    textNote.setText(note.description)

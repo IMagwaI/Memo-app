@@ -63,7 +63,7 @@ class NewAppWidget : AppWidgetProvider() {
                 R.id.viewnote_btn,
                 GotoView(context)
             )
-            views.setTextViewText(R.id.coffee_quote, getRandomQuote(context))
+            views.setTextViewText(R.id.memo_quote, getRandomQuote(context))
 
             // Instruct the widget manager to update the widget
             appWidgetManager.updateAppWidget(appWidgetId, views)

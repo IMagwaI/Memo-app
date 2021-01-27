@@ -55,6 +55,6 @@
     <TextView style="@style/WidgetButtonVerticalSpace" />
 
     <TextView
-        android:id="@+id/coffee_quote"
+        android:id="@+id/memo_quote"
         style="@style/WidgetQuote" />
 </LinearLayout>
