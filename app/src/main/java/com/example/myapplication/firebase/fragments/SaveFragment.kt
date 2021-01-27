@@ -1,17 +1,24 @@
-package com.example.note.firebase.fragments
+package com.example.myapplication.firebase.fragments
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Base64.encodeToString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.example.myapplication.R
 import com.example.myapplication.beans.Note
+import com.example.myapplication.firebase.LoginActivity
+import com.example.myapplication.firebase.OnlineDBActivity
 import com.example.myapplication.localdb.DbManager
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import kotlinx.android.synthetic.main.fragment_firebase_save.*
@@ -35,7 +42,7 @@ class SaveFragment : Fragment(){
         setHasOptionsMenu(true)
 
         val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
-        val string:String="hey "+firebaseAuth.currentUser!!.displayName
+        val string:String=firebaseAuth.currentUser!!.displayName.toString()
         nameDisplay.text = string
 
         // Write a message to the database
@@ -51,6 +58,10 @@ class SaveFragment : Fragment(){
                 database.child(firebaseAuth.uid.toString())
                     .child(l.date.toString() + l.title.toString() + l.description?.length.toString())
                     .setValue(l)
+        }
+
+        logOut.setOnClickListener {
+            logout(this.view)
         }
 
 
@@ -89,4 +100,21 @@ class SaveFragment : Fragment(){
 
         dbManager.sqlDB!!.close()
     }
+    fun logout(view: View?){
+        FirebaseAuth.getInstance().signOut()
+        GoogleSignIn.getClient(this.requireContext(),
+            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()).signOut().addOnSuccessListener(
+                OnSuccessListener {
+                    val intentLogin = Intent(this.requireContext(), LoginActivity::class.java)
+                    startActivity(intentLogin)
+
+                }
+            ).addOnFailureListener(
+                OnFailureListener {
+                    Toast.makeText(this.requireContext(),"Logout failed",Toast.LENGTH_SHORT).show()
+                }
+            )
+
+    }
+
 }

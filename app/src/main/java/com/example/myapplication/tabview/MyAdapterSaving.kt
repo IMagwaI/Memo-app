@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.example.note.firebase.fragments.SaveFragment
+import com.example.myapplication.firebase.fragments.SaveFragment
 import com.example.myapplication.firebase.fragments.UploadFragment
 
 internal class MyAdapterSaving(

@@ -3,18 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/gradbg">
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"
-        android:text="Afraid of losing your data ?"
-        android:textColor="#F1F1F1"
-        android:textSize="24sp" />
+    android:background="@mipmap/login_bk">
 
     <com.google.android.gms.common.SignInButton
         android:id="@+id/login"
@@ -22,26 +11,23 @@
         android:layout_height="80dp"
         android:layout_below="@+id/textView4"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="89dp" />
+        android:layout_marginTop="55dp" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="56dp"
-        android:layout_alignParentEnd="true"
+        android:layout_width="225dp"
+        android:layout_height="58dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="3dp"
-        android:layout_marginBottom="1dp"
+        android:layout_marginBottom="0dp"
         app:srcCompat="@mipmap/google" />
 
     <TextView
         android:id="@+id/textView4"
-        android:layout_width="377dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="62dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="41dp"
-        android:text="all you need to do is to sign in with your google account by clicking on the button below and save your notes"
-        android:textColor="#F1F1F1"
+        android:layout_marginTop="202dp"
+        android:text="Sign in now"
+        android:textColor="#673AB7"
         android:textSize="24sp" />
 </RelativeLayout>
