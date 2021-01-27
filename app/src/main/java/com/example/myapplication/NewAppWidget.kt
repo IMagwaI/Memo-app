@@ -22,10 +22,14 @@ class NewAppWidget : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
-        // There may be multiple widgets active, so update all of them
-        for (appWidgetId in appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId)
-        }
+        val intent = Intent(context.applicationContext, MemoQuotesService::class.java)
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds)
+        context.startService(intent)
+
+        // Maitenant je vais plus faire update manuellement ici , puisque j'ai crée un nouveau service , je lance l'update depuis ce dernier.
+//        for (appWidgetId in appWidgetIds) {
+//            updateAppWidget(context, appWidgetManager, appWidgetId)
+//        }
     }
 
     override fun onEnabled(context: Context) {
@@ -59,6 +63,7 @@ class NewAppWidget : AppWidgetProvider() {
                 R.id.viewnote_btn,
                 GotoView(context)
             )
+            views.setTextViewText(R.id.coffee_quote, getRandomQuote(context))
 
             // Instruct the widget manager to update the widget
             appWidgetManager.updateAppWidget(appWidgetId, views)
@@ -73,6 +78,11 @@ class NewAppWidget : AppWidgetProvider() {
         private fun GotoAddNote(context: Context): PendingIntent {
             val intent = Intent(context, AddActivity::class.java)
             return PendingIntent.getActivity(context, 0, intent, 0)
+        }
+        private fun getRandomQuote(context: Context): String {
+            val quotes = context.resources.getStringArray(R.array.memo_texts)
+            val rand = Math.random() * quotes.size
+            return quotes[rand.toInt()].toString()
         }
     }
 }

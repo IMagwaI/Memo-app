@@ -9,6 +9,11 @@
         android:roundIcon="@mipmap/mylogofinal"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <service
+            android:name=".MemoQuotesService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <receiver android:name=".NewAppWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -26,13 +31,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".firebase.OnlineDBActivity"/>
-        <activity android:name=".firebase.LoginActivity"/>
+        <activity android:name=".firebase.OnlineDBActivity" />
+        <activity android:name=".firebase.LoginActivity" />
         <activity android:name=".AddActivity" />
         <activity android:name=".CalendarActivity" />
         <activity android:name=".BaseActivity" />
         <activity android:name=".DrawShowActivity" />
-
     </application>
 
 </manifest>
