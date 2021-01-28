@@ -56,15 +56,16 @@
                         app:cardCornerRadius="8dp">
 
                         <ImageView
-                            android:id="@+id/modify"
+                            android:id="@+id/delete"
                             android:layout_width="25dp"
                             android:layout_height="25dp"
-                            android:background="@android:drawable/ic_menu_edit"
-                            android:contentDescription="modification"
-                            android:scaleType="centerCrop" />
+                            android:background="@color/white"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_baseline_delete_24" />
                     </androidx.cardview.widget.CardView>
 
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/modifycarrier"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_margin="5dp"
@@ -72,12 +73,12 @@
                         app:cardCornerRadius="8dp">
 
                         <ImageView
-                            android:id="@+id/delete"
+                            android:id="@+id/modify"
                             android:layout_width="25dp"
                             android:layout_height="25dp"
-                            android:background="@color/white"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/ic_baseline_delete_24" />
+                            android:background="@android:drawable/ic_menu_edit"
+                            android:contentDescription="modification"
+                            android:scaleType="centerCrop" />
                     </androidx.cardview.widget.CardView>
 
                     <ImageView

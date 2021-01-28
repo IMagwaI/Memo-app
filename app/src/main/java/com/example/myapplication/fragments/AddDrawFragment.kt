@@ -135,7 +135,7 @@ class AddDrawFragment : Fragment() , DatePickerDialog.OnDateSetListener,
     @RequiresApi(Build.VERSION_CODES.N)
     private fun addNote() {
         val title: String = "Draw ("+extraBitmap.generationId.toString()+")"
-        val note: String = "This is a drawing note, press edit button to display it"
+        val note: String = "This is a drawing note, press the note to display it"
         val bitmap: Bitmap = extraBitmap
 
         val bos = ByteArrayOutputStream()

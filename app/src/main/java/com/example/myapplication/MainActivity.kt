@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.RoomMasterTable.TABLE_NAME
@@ -117,7 +118,7 @@ class MainActivity : BaseActivity() {
         val projections = arrayOf("ID", "title", "description", "date", "reminderdate","img")
         val selectionArgs = arrayOf(search)
         var cursor = dbManager.query(projections, "ID like ?", selectionArgs, "date" + " DESC")
-        var countmemos: Int = cursor.getCount()
+        var countmemos: Int = cursor.count
 //        println(countmemos)
         val widgetdata = WidgetData(this)
         widgetdata.setMemoCount(countmemos)
@@ -180,8 +181,9 @@ class MainActivity : BaseActivity() {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             val myView = layoutInflater.inflate(R.layout.noteticket, null)
             val note = listNotesAdapter[position]
-            if(note.description == "This is a drawing note, press edit button to display it"){
+            if(note.description == "This is a drawing note, press the note to display it" ){
                 myView.note_img.setImageResource(R.drawable.draw_icon)
+                myView.modifycarrier.visibility = View.GONE
             }
             myView.textTitle.text = note.title
             if(note.description?.length!! > 60){
@@ -223,7 +225,7 @@ class MainActivity : BaseActivity() {
                 val dialogBuilder = AlertDialog.Builder(this@MainActivity)
 
 
-                if (note.description == "This is a drawing note, press edit button to display it") {
+                if (note.description == "This is a drawing note, press the note to display it") {
 
                     val intent = Intent(this.context, DrawShowActivity::class.java)
                     intent.putExtra("id", note.id!!)
