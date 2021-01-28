@@ -1,6 +1,8 @@
 package com.example.myapplication.firebase
 
+import android.graphics.Color
 import android.os.Bundle
+import androidx.appcompat.widget.Toolbar
 import androidx.viewpager.widget.ViewPager
 import com.example.myapplication.BaseActivity
 import com.example.myapplication.R
@@ -14,7 +16,9 @@ class OnlineDBActivity: BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_firebase)
-
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        toolbar.setTitleTextColor(Color.WHITE)
+        setSupportActionBar(toolbar)
 
         title = "The memo"
         tabLayout = findViewById(R.id.tabLayout)

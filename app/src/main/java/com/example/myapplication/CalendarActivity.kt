@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.EventDay
 import com.example.myapplication.localdb.DbManager
@@ -22,10 +23,10 @@ class CalendarActivity : BaseActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_calendar)
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        toolbar.setTitleTextColor(Color.WHITE)
+        setSupportActionBar(toolbar)
         val events: MutableList<EventDay> = ArrayList()
-
-
-
        var dbManager = DbManager(this)
         val projections = arrayOf("ID", "title", "reminderdate")
         val selectionArgs = arrayOf("null")

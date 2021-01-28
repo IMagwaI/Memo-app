@@ -3,31 +3,49 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@mipmap/login_bk">
+>
+    <LinearLayout
+        android:id="@+id/tab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/login"
-        android:layout_width="181dp"
-        android:layout_height="80dp"
-        android:layout_below="@+id/textView4"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="55dp" />
+        <include layout="@layout/gradient_toolbar" />
+    </LinearLayout>
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="225dp"
-        android:layout_height="58dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tab"
         android:layout_alignParentBottom="true"
+        android:layout_marginTop="0dp"
         android:layout_marginBottom="0dp"
-        app:srcCompat="@mipmap/google" />
+        android:background="@mipmap/login_bk">
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="62dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="202dp"
-        android:text="Sign in now"
-        android:textColor="#673AB7"
-        android:textSize="24sp" />
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/login"
+            android:layout_width="181dp"
+            android:layout_height="80dp"
+            android:layout_below="@+id/textView4"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="55dp" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="225dp"
+            android:layout_height="58dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="0dp"
+            app:srcCompat="@mipmap/google" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="62dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="202dp"
+            android:text="Sign in now"
+            android:textColor="#673AB7"
+            android:textSize="24sp" />
+    </RelativeLayout>
 </RelativeLayout>

@@ -3,6 +3,7 @@ package com.example.myapplication
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Intent
+import android.graphics.Color
 import android.icu.text.SimpleDateFormat
 import android.icu.util.Calendar
 import android.os.Build
@@ -15,6 +16,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager.widget.ViewPager
 import com.example.myapplication.fragments.descriptionNote
@@ -37,6 +39,11 @@ class AddActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add)
+        title = "Add note"
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        toolbar.setTitleTextColor(Color.WHITE)
+        setSupportActionBar(toolbar)
+
         idNote = intent.getIntExtra("id", 0)
         if (idNote!! > 0) {
             titleNote = intent.getStringExtra("title")
@@ -44,7 +51,6 @@ class AddActivity : BaseActivity() {
         }
 
 
-        title = "The memo"
         tabLayout = findViewById(R.id.tabLayout)
         viewPager = findViewById(R.id.viewPager)
         tabLayout.addTab(tabLayout.newTab().setIcon(R.mipmap.text))

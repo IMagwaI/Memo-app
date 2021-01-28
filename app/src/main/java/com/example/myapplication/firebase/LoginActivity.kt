@@ -1,8 +1,10 @@
 package com.example.myapplication.firebase
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import com.example.myapplication.BaseActivity
 import com.example.myapplication.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -26,6 +28,9 @@ class LoginActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        toolbar.setTitleTextColor(Color.WHITE)
+        setSupportActionBar(toolbar)
         firebaseAuth= FirebaseAuth.getInstance()
         gso= GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken("34402196657-onggn4hj92h9sur9eb62f1p5sprqg43c.apps.googleusercontent.com")
