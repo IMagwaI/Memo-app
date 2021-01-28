@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="20dp"
-    android:background="@drawable/background_layout"
+    android:padding="7dp"
+    android:background="#F5F5F5"
     android:orientation="vertical">
 
 
@@ -14,6 +14,7 @@
         android:id="@+id/wholenote"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/background_layout"
         android:orientation="vertical">
 
         <LinearLayout
@@ -33,6 +34,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/white"
+                    android:padding="5sp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/writing_note_ready" />
             </androidx.cardview.widget.CardView>
