@@ -22,7 +22,7 @@
             android:title="Corbeille" />
         <item
             android:id="@+id/nav_sync"
-            android:icon="@mipmap/google_logo"
+            android:icon="@drawable/ic_google_logo"
             android:title="Sync with google" />
     </group>
 

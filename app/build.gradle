@@ -67,4 +67,8 @@ dependencies {
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-database-ktx'
 
+
+    //about us
+    implementation 'com.github.medyo:android-about-page:1.3.1'
+
 }

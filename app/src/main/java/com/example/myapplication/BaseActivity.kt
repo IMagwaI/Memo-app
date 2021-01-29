@@ -5,15 +5,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
+import com.example.myapplication.aboutus.AboutUsActivity
 import com.example.myapplication.firebase.LoginActivity
 import com.google.android.material.navigation.NavigationView
 
@@ -68,6 +67,7 @@ open class BaseActivity : AppCompatActivity() {
             val intent_add_note = Intent(this, AddActivity::class.java)
             val intent_note = Intent(this, MainActivity::class.java)
             val intent_login = Intent(this, LoginActivity::class.java)
+            val intent_aboutus = Intent(this, AboutUsActivity::class.java)
 
             when (menuItem.itemId) {
                 R.id.nav_note -> this.startActivity(intent_note)
@@ -75,6 +75,7 @@ open class BaseActivity : AppCompatActivity() {
                 R.id.nav_trash -> Toast.makeText(this, "Trash", Toast.LENGTH_SHORT).show()
                 R.id.nav_add_note -> this.startActivity(intent_add_note)
                 R.id.nav_sync-> this.startActivity(intent_login)
+                R.id.nav_AboutUs->this.startActivity(intent_aboutus)
                 else -> return@OnNavigationItemSelectedListener true
             }
             false

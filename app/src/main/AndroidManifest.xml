@@ -12,7 +12,7 @@
         <service
             android:name=".MemoQuotesService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <receiver android:name=".NewAppWidget">
             <intent-filter>
@@ -37,6 +37,8 @@
         <activity android:name=".CalendarActivity" />
         <activity android:name=".BaseActivity" />
         <activity android:name=".DrawShowActivity" />
+        <activity android:name=".aboutus.AboutUsActivity" />
+
     </application>
 
 </manifest>

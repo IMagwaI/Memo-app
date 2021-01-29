@@ -19,13 +19,15 @@
             android:id="@+id/color"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:srcCompat="@android:drawable/ic_menu_edit" />
+            android:backgroundTint="#00FFFFFF"
+            app:srcCompat="@mipmap/chromatic" />
 
         <ImageButton
             android:id="@+id/save"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:srcCompat="@android:drawable/ic_menu_save" />
+            android:backgroundTint="#00FFFFFF"
+            app:srcCompat="@mipmap/diskette" />
     </LinearLayout>
 
     <Switch

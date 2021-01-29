@@ -41,35 +41,38 @@ class UploadFragment : Fragment(){
         val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
         val rootRef = FirebaseDatabase.getInstance().reference
         val usersRef = rootRef.child(firebaseAuth.uid.toString())
-        upload.setOnClickListener {
-            querySearch("%")
-            val valueEventListener: ValueEventListener = object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val list: MutableList<String?> = ArrayList()
-                    for (ds in dataSnapshot.children) {
-                        val uid = ds.key
-                        list.add(uid)
-                        println(uid)
-                        addNote(
-                            ds.child("title").value.toString(),
-                            ds.child("description").value.toString(),
-                            ds.child("date").value.toString(),
-                            ds.child("imgS").value.toString(),
-                            ds.child("reminderdate").value.toString()
-                        )
+        try{
+            upload.setOnClickListener {
+                querySearch("%")
+                val valueEventListener: ValueEventListener = object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val list: MutableList<String?> = ArrayList()
+                        for (ds in dataSnapshot.children) {
+                            val uid = ds.key
+                            list.add(uid)
+                            println(uid)
+                            addNote(
+                                ds.child("title").value.toString(),
+                                ds.child("description").value.toString(),
+                                ds.child("date").value.toString(),
+                                ds.child("imgS").value.toString(),
+                                ds.child("reminderdate").value.toString()
+                            )
+                        }
+
+                        //Do what you need to do with your list
                     }
 
-                    //Do what you need to do with your list
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        println(databaseError.message) //Don't ignore errors!
+                    }
                 }
+                usersRef.addListenerForSingleValueEvent(valueEventListener)
 
-                override fun onCancelled(databaseError: DatabaseError) {
-                    println(databaseError.message) //Don't ignore errors!
-                }
             }
-            usersRef.addListenerForSingleValueEvent(valueEventListener)
-
+        }catch (e: Error){
+            Toast.makeText(this.requireContext(),"Service failed, this feature required android api +26",Toast.LENGTH_LONG).show()
         }
-
         super.onViewCreated(view, savedInstanceState)
     }
 
@@ -80,23 +83,26 @@ class UploadFragment : Fragment(){
             if (l.title==title&&l.description==note&&l.date==date&&l.imgS==imgS&&l.reminderdate==reminderdate)
                 check=false
         }
+        try {
+            if (check) {
+                val values = ContentValues()
+                values.put("title", title)
+                values.put("description", note)
+                values.put("reminderdate", reminderdate)
+                val decodedByte: ByteArray = Base64.getDecoder().decode(imgS)
+                values.put("img", decodedByte)
+                values.put("date", date)
 
-        if(check) {
-            val values = ContentValues()
-            values.put("title", title)
-            values.put("description", note)
-            values.put("reminderdate", reminderdate)
-            val decodedByte: ByteArray = Base64.getDecoder().decode(imgS)
-            values.put("img", decodedByte)
-            values.put("date", date)
 
+                val dbManager = DbManager(this.requireActivity())
 
-            val dbManager = DbManager(this.requireActivity())
-
-            val id = dbManager.insertNote(values)
-            if (id > 0)
-                Toast.makeText(this.requireContext(), "added to database", Toast.LENGTH_SHORT)
-                    .show()
+                val id = dbManager.insertNote(values)
+                if (id > 0)
+                    Toast.makeText(this.requireContext(), "added to database", Toast.LENGTH_SHORT)
+                        .show()
+            }
+        }catch (e: Error){
+            Toast.makeText(this.requireContext(),"Service failed, this feature required android api +26",Toast.LENGTH_LONG).show()
         }
     }
 
@@ -109,33 +115,39 @@ class UploadFragment : Fragment(){
         val projections = arrayOf("ID", "title", "description", "date", "img", "reminderdate")
         val selectionArgs = arrayOf(search)
         var cursor = dbManager.query(projections, "ID like ?", selectionArgs, "ID")
-        if (cursor.moveToFirst()) {
-            savedListNotes.clear()
-            do {
-                val id = cursor.getInt(cursor.getColumnIndex("ID"))
-                val title = cursor.getString(cursor.getColumnIndex("title"))
-                val description = cursor.getString(cursor.getColumnIndex("description"))
-                val img = cursor.getBlob(cursor.getColumnIndex("img"))
-                val reminderDate=cursor.getString(cursor.getColumnIndex("reminderdate"))
-                val date = cursor.getString(3)
-                try {
-                    val base64Encoded = Base64.getEncoder().encodeToString(img)
-                    savedListNotes.add(
-                        Note(
-                            id,
-                            title,
-                            description,
-                            date,
-                            base64Encoded,
-                            reminderDate
+        try {
+            if (cursor.moveToFirst()) {
+                savedListNotes.clear()
+                do {
+                    val id = cursor.getInt(cursor.getColumnIndex("ID"))
+                    val title = cursor.getString(cursor.getColumnIndex("title"))
+                    val description = cursor.getString(cursor.getColumnIndex("description"))
+                    val img = cursor.getBlob(cursor.getColumnIndex("img"))
+                    val reminderDate = cursor.getString(cursor.getColumnIndex("reminderdate"))
+                    val date = cursor.getString(3)
+                    try {
+                        val base64Encoded = Base64.getEncoder().encodeToString(img)
+                        savedListNotes.add(
+                            Note(
+                                id,
+                                title,
+                                description,
+                                date,
+                                base64Encoded,
+                                reminderDate
+                            )
                         )
-                    )
-                }catch (e: Exception){
-                    savedListNotes.add(Note(id, title, description, date, reminderDate))
-                }
+                    } catch (e: Exception) {
+                        savedListNotes.add(Note(id, title, description, date, reminderDate))
 
-            } while (cursor.moveToNext())
+                    }
+
+                } while (cursor.moveToNext())
+            }
+        }catch (e: Error){
+            Toast.makeText(this.requireContext(),"Service failed, this feature required android api +26",Toast.LENGTH_LONG).show()
         }
+
 
         dbManager.sqlDB!!.close()
     }
