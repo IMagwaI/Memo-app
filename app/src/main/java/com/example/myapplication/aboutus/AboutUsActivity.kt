@@ -26,8 +26,8 @@ class AboutUsActivity: BaseActivity() {
             .setImage(R.mipmap.mylogofinal)
             .addItem(Element("version : 1.0.0",null))
             .addGroup("Connect with us")
-            .addEmail("elmehdi.sakout@gmail.com")
-            .addWebsite("https://mehdisakout.com/")
+            .addEmail("familyaseds@gmail.com")
+            .addWebsite("www.google.com")
             .addPlayStore("com.ideashower.readitlater.pro")
             .addGitHub("medyo")
             .create()
@@ -36,6 +36,5 @@ class AboutUsActivity: BaseActivity() {
 
 
     }
-
 
 }

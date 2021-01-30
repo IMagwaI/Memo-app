@@ -1,9 +1,10 @@
-package com.example.myapplication
+package com.example.myapplication.widget
 
 import android.app.Service
 import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.os.IBinder
+import com.example.myapplication.widget.NewAppWidget
 
 class MemoQuotesService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {

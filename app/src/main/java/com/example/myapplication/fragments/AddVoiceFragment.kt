@@ -23,6 +23,7 @@ import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.example.myapplication.MainActivity
 import com.example.myapplication.R
 import com.example.myapplication.localdb.DbManager
 import com.example.myapplication.notif.NotificationSchedule
@@ -85,6 +86,9 @@ class AddVoiceFragment : Fragment(), DatePickerDialog.OnDateSetListener,
         }
         save.setOnClickListener {
             addNote()
+            val intent = Intent(this.context, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
         }
     }
 
