@@ -3,6 +3,8 @@ package com.example.myapplication.fragments
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.ContentValues
+import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.icu.util.Calendar
 import android.os.Build
@@ -15,21 +17,20 @@ import android.widget.DatePicker
 import android.widget.TimePicker
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import com.example.myapplication.R
-import com.example.myapplication.extraBitmap
-import com.example.myapplication.localdb.DbManager
-import kotlinx.android.synthetic.main.fragment_add_draw.*
-import java.io.ByteArrayOutputStream
 import androidx.fragment.app.FragmentActivity
 import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.myapplication.drawColor
+import com.example.myapplication.*
+import com.example.myapplication.localdb.DbManager
 import com.example.myapplication.notif.NotificationSchedule
 import dev.sasikanth.colorsheet.ColorSheet
 import kotlinx.android.synthetic.main.activity_add.*
+import kotlinx.android.synthetic.main.fragment_add_draw.*
+import java.io.ByteArrayOutputStream
 import java.util.*
+
 
 class AddDrawFragment : Fragment() , DatePickerDialog.OnDateSetListener,
     TimePickerDialog.OnTimeSetListener{
@@ -61,7 +62,8 @@ class AddDrawFragment : Fragment() , DatePickerDialog.OnDateSetListener,
             ColorSheet().cornerRadius(8)
                 .colorPicker(
                     colors = colors,
-                    listener = { color -> drawColor=color
+                    listener = { color ->
+                        drawColor = color
                     })
                 .show((activity as FragmentActivity).supportFragmentManager)
 
@@ -81,7 +83,7 @@ class AddDrawFragment : Fragment() , DatePickerDialog.OnDateSetListener,
                 month = calendar.get(Calendar.MONTH)
                 year = calendar.get(Calendar.YEAR)
                 val datePickerDialog =
-                    DatePickerDialog(this.context!!, this, year, month,day)
+                    DatePickerDialog(this.context!!, this, year, month, day)
                 datePickerDialog.show()
                 textReminder.visibility=View.VISIBLE
             } else {
@@ -92,6 +94,10 @@ class AddDrawFragment : Fragment() , DatePickerDialog.OnDateSetListener,
         }
         save.setOnClickListener {
             addNote()
+            val intent = Intent(this.context, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+
         }
 
         super.onViewCreated(view, savedInstanceState)
@@ -104,8 +110,10 @@ class AddDrawFragment : Fragment() , DatePickerDialog.OnDateSetListener,
         val calendar: Calendar = Calendar.getInstance()
         hour = calendar.get(Calendar.HOUR)
         minute = calendar.get(Calendar.MINUTE)
-        val timePickerDialog = TimePickerDialog(this.context, this, hour, minute,
-            DateFormat.is24HourFormat(this.context))
+        val timePickerDialog = TimePickerDialog(
+            this.context, this, hour, minute,
+            DateFormat.is24HourFormat(this.context)
+        )
         timePickerDialog.show()
     }
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
@@ -122,9 +130,11 @@ class AddDrawFragment : Fragment() , DatePickerDialog.OnDateSetListener,
         val work = OneTimeWorkRequestBuilder<NotificationSchedule>()
             .setInitialDelay(timeDelay, java.util.concurrent.TimeUnit.SECONDS)
             .setConstraints(
-                Constraints.Builder().setTriggerContentMaxDelay(1,
-                java.util.concurrent.TimeUnit.SECONDS
-            ).build()) // API Level 24
+                Constraints.Builder().setTriggerContentMaxDelay(
+                    1,
+                    java.util.concurrent.TimeUnit.SECONDS
+                ).build()
+            ) // API Level 24
             .setInputData(data.build())
             .addTag(tag)
             .build()
@@ -148,7 +158,7 @@ class AddDrawFragment : Fragment() , DatePickerDialog.OnDateSetListener,
         values.put("img", img)
         try {
             values.put("reminderdate", reminderDate.toString())
-        }catch (e:Exception) {
+        }catch (e: Exception) {
             values.put("reminderdate", "null")
         }
         val dbManager = DbManager(this.requireContext())
@@ -157,8 +167,8 @@ class AddDrawFragment : Fragment() , DatePickerDialog.OnDateSetListener,
         dbManager.sqlDB!!.close()
         if (reminderDate.toString()!="null"){
             var delay:Long= Math.abs(System.currentTimeMillis() - reminderDate!!.time)
-            println("this is delay"+delay)
-            scheduleNotification(delay/1000,title!!,note!!)
+            println("this is delay" + delay)
+            scheduleNotification(delay / 1000, title!!, note!!)
         }
 
 

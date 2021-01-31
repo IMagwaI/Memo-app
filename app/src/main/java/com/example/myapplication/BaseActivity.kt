@@ -64,10 +64,16 @@ open class BaseActivity : AppCompatActivity() {
             // Check to see which item was being clicked and perform
             // appropriate action
             val intent_calendar = Intent(this, CalendarActivity::class.java)
+            intent_calendar.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             val intent_add_note = Intent(this, AddActivity::class.java)
+            intent_add_note.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             val intent_note = Intent(this, MainActivity::class.java)
+            intent_note.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             val intent_login = Intent(this, LoginActivity::class.java)
+            intent_login.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             val intent_aboutus = Intent(this, AboutUsActivity::class.java)
+            intent_aboutus.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+
 
             when (menuItem.itemId) {
                 R.id.nav_note -> this.startActivity(intent_note)

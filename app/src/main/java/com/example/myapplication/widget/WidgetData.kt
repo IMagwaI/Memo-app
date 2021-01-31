@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.myapplication.widget
 
 import android.content.Context
 

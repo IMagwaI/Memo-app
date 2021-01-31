@@ -4,8 +4,6 @@ import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
@@ -14,12 +12,12 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.RoomMasterTable.TABLE_NAME
 import com.example.myapplication.beans.Note
 import com.example.myapplication.localdb.DbManager
+import com.example.myapplication.widget.NewAppWidget
+import com.example.myapplication.widget.WidgetData
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custum_dialog.*
 import kotlinx.android.synthetic.main.noteticket.*

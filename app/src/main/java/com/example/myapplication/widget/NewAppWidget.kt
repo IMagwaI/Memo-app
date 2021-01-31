@@ -1,17 +1,12 @@
-package com.example.myapplication
+package com.example.myapplication.widget
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
-import android.database.DatabaseUtils
-import android.database.sqlite.SQLiteDatabase
 import android.widget.RemoteViews
-import androidx.room.RoomMasterTable
-import com.example.myapplication.beans.Note
-import com.example.myapplication.localdb.DbManager
-import kotlinx.android.synthetic.main.activity_main.*
+import com.example.myapplication.*
 
 /**
  * Implementation of App Widget functionality.

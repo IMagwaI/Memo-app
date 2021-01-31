@@ -5,6 +5,7 @@ package com.example.myapplication.fragments
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.ContentValues
+import android.content.Intent
 import android.icu.util.Calendar
 import android.os.Build
 import android.os.Bundle
@@ -19,6 +20,7 @@ import androidx.work.Constraints
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.example.myapplication.MainActivity
 import com.example.myapplication.R
 import com.example.myapplication.localdb.DbManager
 import com.example.myapplication.notif.NotificationSchedule
@@ -79,6 +81,10 @@ class AddTextNoteFragment : Fragment(), DatePickerDialog.OnDateSetListener,
         }
         saveButton.setOnClickListener {
             addNote()
+            val intent = Intent(this.context, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+
         }
 
         //check edit

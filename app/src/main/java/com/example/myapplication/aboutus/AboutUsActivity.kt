@@ -26,16 +26,16 @@ class AboutUsActivity: BaseActivity() {
             .setImage(R.mipmap.mylogofinal)
             .addItem(Element("version : 1.0.0",null))
             .addGroup("Connect with us")
-            .addEmail("ayoubbarca99@gmail.com")
+            .addEmail("Note@gmail.com")
             .addWebsite("https://google.com/")
             .addPlayStore("com.example.myapplication")
             .addGitHub("IMagwaI/Projet-Android")
+
             .create()
 
         mylayout.addView(aboutPage)
 
 
     }
-
 
 }
