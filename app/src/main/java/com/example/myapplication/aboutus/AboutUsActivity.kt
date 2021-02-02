@@ -13,6 +13,9 @@ import mehdi.sakout.aboutpage.Element
 
 class AboutUsActivity: BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE)
+        var editor = sharedPreferences!!.edit()
+        var isDarkModeOn = sharedPreferences!!.getBoolean("isDarkModeOn", false)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_aboutus)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -21,10 +24,10 @@ class AboutUsActivity: BaseActivity() {
 
         val aboutPage: View = AboutPage(this)
             .isRTL(false)
-            .enableDarkMode(false)
+            .enableDarkMode(isDarkModeOn)
             .setDescription("This app has been developped by Oumaima, Ayoub and Abdelkader")
             .setImage(R.mipmap.mylogofinal)
-            .addItem(Element("version : 1.0.0",null))
+            .addItem(Element("version : 1.0.0", null))
             .addGroup("Connect with us")
             .addEmail("familyaseds@gmail.com")
             .addWebsite("www.google.com")
