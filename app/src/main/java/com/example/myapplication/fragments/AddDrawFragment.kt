@@ -15,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
 import android.widget.TimePicker
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -28,6 +29,9 @@ import com.example.myapplication.notif.NotificationSchedule
 import dev.sasikanth.colorsheet.ColorSheet
 import kotlinx.android.synthetic.main.activity_add.*
 import kotlinx.android.synthetic.main.fragment_add_draw.*
+import kotlinx.android.synthetic.main.fragment_add_draw.switch1
+import kotlinx.android.synthetic.main.fragment_add_draw.textReminder
+import kotlinx.android.synthetic.main.fragment_add_note.*
 import java.io.ByteArrayOutputStream
 import java.util.*
 
@@ -39,12 +43,8 @@ class AddDrawFragment : Fragment() , DatePickerDialog.OnDateSetListener,
     var year: Int = 0
     var hour: Int = 0
     var minute: Int = 0
-    var myDay = 0
-    var myMonth: Int = 0
-    var myYear: Int = 0
-    var myHour: Int = 0
-    var myMinute: Int = 0
-    var reminderDate: Date?=null
+    @RequiresApi(Build.VERSION_CODES.N)
+    var reminderDate = Calendar.getInstance()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -78,68 +78,74 @@ class AddDrawFragment : Fragment() , DatePickerDialog.OnDateSetListener,
             if (isChecked) {
                 //DatePicker
                 //TimePicker
-                val calendar: Calendar = Calendar.getInstance()
-                day = calendar.get(Calendar.DAY_OF_MONTH)
-                month = calendar.get(Calendar.MONTH)
-                year = calendar.get(Calendar.YEAR)
-                val datePickerDialog =
-                    DatePickerDialog(this.context!!, this, year, month, day)
-                datePickerDialog.show()
+                val c = Calendar.getInstance()
+                val year = c.get(Calendar.YEAR)
+                val month = c.get(Calendar.MONTH)
+                val day = c.get(Calendar.DAY_OF_MONTH)
+
+                val dpd = DatePickerDialog(this.context!!,this, year, month, day)
+                dpd.datePicker.minDate = c.timeInMillis;
+                dpd.show()
                 textReminder.visibility=View.VISIBLE
             } else {
                 textReminder.visibility=View.INVISIBLE
-                reminderDate=Date(0)
+                reminderDate=null
 
             }
         }
         save.setOnClickListener {
-            addNote()
-            val intent = Intent(this.context, MainActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-
+            if (reminderDate==null || reminderDate!!.timeInMillis > Calendar.getInstance().timeInMillis) {
+                val intent = Intent(this.context, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                addNote()
+            }
+            else
+            {
+                Toast.makeText(this.context!!, "Date invalide", Toast.LENGTH_LONG).show()}
         }
 
         super.onViewCreated(view, savedInstanceState)
     }
     @RequiresApi(Build.VERSION_CODES.N)
-    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        myDay = day
-        myYear = year
-        myMonth = month
-        val calendar: Calendar = Calendar.getInstance()
-        hour = calendar.get(Calendar.HOUR)
-        minute = calendar.get(Calendar.MINUTE)
-        val timePickerDialog = TimePickerDialog(
-            this.context, this, hour, minute,
-            DateFormat.is24HourFormat(this.context)
-        )
+    override fun onDateSet(view: DatePicker?, Year: Int, Month: Int, dayOf: Int) {
+        day = dayOf
+        year = Year
+        month = Month
+        val timePickerDialog = TimePickerDialog(this.context, this, hour, minute,
+            DateFormat.is24HourFormat(this.context))
         timePickerDialog.show()
     }
-    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-        myHour = hourOfDay
-        myMinute = minute
-        textReminder.text = " "+myYear + "/" + myMonth + "/" + myDay + "at "  + myHour + ":"  + myMinute
-        reminderDate = Date(myYear, myMonth, myDay, myHour, myMinute)
+    @RequiresApi(Build.VERSION_CODES.N)
+    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, Minute: Int) {
+        reminderDate=Calendar.getInstance()
+        hour = hourOfDay
+        minute = Minute
+        textReminder.text = " "+year + "/" + month+1 + "/" + day + " at "  + hour + ":"  + minute
+        reminderDate!!.set(Calendar.MINUTE, minute);
+        reminderDate!!.set(Calendar.HOUR_OF_DAY, hour);
+        reminderDate!!.set(Calendar.MONTH, month);
+        reminderDate!!.set(Calendar.DAY_OF_MONTH, day);
+        reminderDate!!.set(Calendar.YEAR,year);
+        if (reminderDate!!.timeInMillis <= Calendar.getInstance().timeInMillis)
+        {Toast.makeText(this.context!!, "Invalid Time", Toast.LENGTH_LONG).show()}
     }
     @RequiresApi(Build.VERSION_CODES.N)
-    fun scheduleNotification(timeDelay: Long, tag: String, body: String) {
+    fun scheduleNotification(timeDelay: Long, tag: String, body: String):UUID {
 
         val data = Data.Builder().putString("body", body)
 
         val work = OneTimeWorkRequestBuilder<NotificationSchedule>()
             .setInitialDelay(timeDelay, java.util.concurrent.TimeUnit.SECONDS)
-            .setConstraints(
-                Constraints.Builder().setTriggerContentMaxDelay(
-                    1,
-                    java.util.concurrent.TimeUnit.SECONDS
-                ).build()
-            ) // API Level 24
+            .setConstraints(Constraints.Builder().setTriggerContentMaxDelay(1,
+                java.util.concurrent.TimeUnit.SECONDS
+            ).build()) // API Level 24
             .setInputData(data.build())
             .addTag(tag)
             .build()
 
         WorkManager.getInstance().enqueue(work)
+        return work.id
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -147,6 +153,7 @@ class AddDrawFragment : Fragment() , DatePickerDialog.OnDateSetListener,
         val title: String = "Draw ("+extraBitmap.generationId.toString()+")"
         val note: String = "This is a drawing note, press the note to display it"
         val bitmap: Bitmap = extraBitmap
+        var notifId: UUID?=null
 
         val bos = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos)
@@ -156,20 +163,24 @@ class AddDrawFragment : Fragment() , DatePickerDialog.OnDateSetListener,
         values.put("title", title)
         values.put("description", note)
         values.put("img", img)
-        try {
+        /*try {
             values.put("reminderdate", reminderDate.toString())
         }catch (e: Exception) {
             values.put("reminderdate", "null")
-        }
+        }*/
+        if(reminderDate!=null) {
+            values.put("reminderdate", reminderDate!!.time.toString())
+            var delay: Long = Math.abs(System.currentTimeMillis() - reminderDate!!.time.time)
+            println("this is delay" + delay)
+            notifId = scheduleNotification(delay / 1000, title!!, note!!)
+        }else values.put("reminderdate", "null")
+
+        values.put("notifid",notifId.toString())
         val dbManager = DbManager(this.requireContext())
         val id = dbManager.insertNote(values)
 
         dbManager.sqlDB!!.close()
-        if (reminderDate.toString()!="null"){
-            var delay:Long= Math.abs(System.currentTimeMillis() - reminderDate!!.time)
-            println("this is delay" + delay)
-            scheduleNotification(delay / 1000, title!!, note!!)
-        }
+
 
 
     }

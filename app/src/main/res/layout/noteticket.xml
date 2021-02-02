@@ -82,16 +82,24 @@
                             android:contentDescription="modification"
                             android:scaleType="centerCrop" />
                     </androidx.cardview.widget.CardView>
-
-                    <ImageView
+                    <androidx.cardview.widget.CardView
                         android:id="@+id/reminder"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
-                        android:background="@android:drawable/ic_lock_idle_alarm"
-                        android:contentDescription="delete"
-                        android:scaleType="centerCrop"
-                        android:src="@android:drawable/ic_menu_delete"
-                        android:visibility="invisible" />
+                        android:layout_margin="5dp"
+                        android:elevation="10dp"
+                        app:cardCornerRadius="8dp"
+                        android:visibility="invisible">
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:background="@android:drawable/ic_lock_idle_alarm"
+                            android:contentDescription="delete"
+                            android:scaleType="centerCrop"/>
+                    </androidx.cardview.widget.CardView>
+
+
 
                     <TextView
                         android:id="@+id/textTitle"

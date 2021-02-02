@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:showIn="navigation_view"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:showIn="navigation_view">
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_note"
@@ -29,6 +29,12 @@
     <item android:title="Autres">
         <menu>
             <item
+                android:id="@+id/nav_darkmode_id"
+                android:title="Dark Mode"
+                android:icon="@drawable/ic_light"
+                app:actionLayout="@layout/nav_drawer_darkmode_switch"
+                />
+            <item
                 android:id="@+id/nav_help"
                 android:icon="@drawable/ic_help"
                 android:title="Help" />
@@ -40,6 +46,7 @@
                 android:id="@+id/nav_settings"
                 android:icon="@drawable/ic_settings"
                 android:title="Settings" />
+
         </menu>
     </item>
 

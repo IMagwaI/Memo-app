@@ -43,7 +43,7 @@ dependencies {
     //color picker
     implementation "dev.sasikanth:colorsheet:1.0.1"
     //calendar
-    implementation 'com.applandeo:material-calendar-view:1.9.0-rc03'
+    implementation 'com.riontech:calendar:1.0'
     //notification
     implementation 'android.arch.work:work-runtime-ktx:1.0.1'
 
