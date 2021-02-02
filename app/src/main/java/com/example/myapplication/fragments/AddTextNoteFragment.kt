@@ -27,6 +27,7 @@ import com.example.myapplication.notif.NotificationSchedule
 import kotlinx.android.synthetic.main.fragment_add_note.*
 import kotlinx.android.synthetic.main.fragment_add_note.switch1
 import kotlinx.android.synthetic.main.fragment_add_note.textReminder
+import kotlinx.android.synthetic.main.noteticket.*
 import java.lang.Math.abs
 import java.time.LocalDateTime
 import java.util.*
@@ -35,6 +36,8 @@ import java.util.*
 var idNote: Int? = null
 var titleNote:String?=""
 var descriptionNote:String?=""
+@RequiresApi(Build.VERSION_CODES.N)
+var reminderDate :Calendar?=null
 
 class AddTextNoteFragment : Fragment(), DatePickerDialog.OnDateSetListener,
     TimePickerDialog.OnTimeSetListener {
@@ -43,12 +46,6 @@ class AddTextNoteFragment : Fragment(), DatePickerDialog.OnDateSetListener,
     var year: Int = 0
     var hour: Int = 0
     var minute: Int = 0
-    var myDay = 0
-    var myMonth: Int = 0
-    var myYear: Int = 0
-    var myHour: Int = 0
-    var myMinute: Int = 0
-    var reminderDate: Date?=null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,30 +58,55 @@ class AddTextNoteFragment : Fragment(), DatePickerDialog.OnDateSetListener,
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setHasOptionsMenu(true)
+        print("print this HAHA $reminderDate")
+        switch1.isChecked = reminderDate!=null
         switch1?.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 //DatePicker
                 //TimePicker
-                val calendar: Calendar = Calendar.getInstance()
-                day = calendar.get(Calendar.DAY_OF_MONTH)
-                month = calendar.get(Calendar.MONTH)
-                year = calendar.get(Calendar.YEAR)
-                val datePickerDialog =
-                    DatePickerDialog(this.context!!, this, year, month,day)
-                datePickerDialog.show()
+                val c = Calendar.getInstance()
+                val year = c.get(Calendar.YEAR)
+                val month = c.get(Calendar.MONTH)
+                val day = c.get(Calendar.DAY_OF_MONTH)
+
+                val dpd = DatePickerDialog(this.context!!,this, year, month, day)
+                dpd.datePicker.minDate = c.timeInMillis;
+                dpd.show()
                 textReminder.visibility=View.VISIBLE
             } else {
                 //DeleteNotification
-                textReminder.visibility=View.VISIBLE
+                if (idNote != 0 && idNote != null) {
+                    val dbManager = DbManager(this.context!!)
+                    val selectionArgs = arrayOf(idNote.toString())
+                    val projections = arrayOf("ID", "notifid")
+                    var cursor = dbManager.query(
+                        projections,
+                        "ID like ?",
+                        selectionArgs,
+                        "date" + " DESC"
+                    )
+                    if (cursor.moveToFirst()) {
+                        do {
+                            val id = cursor.getString(cursor.getColumnIndex("notifid"))
+                            val workManager = WorkManager.getInstance()
+                            workManager.cancelWorkById(UUID.fromString(id))
+                        } while (cursor.moveToNext())
+                    }
+                }
+                textReminder.visibility=View.INVISIBLE
+
                 reminderDate=null
             }
         }
         saveButton.setOnClickListener {
-            addNote()
-            val intent = Intent(this.context, MainActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-
+            if (reminderDate==null || reminderDate!!.timeInMillis > Calendar.getInstance().timeInMillis) {
+                val intent = Intent(this.context, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                addNote()
+            }
+            else
+            {Toast.makeText(this.context!!, "Date invalide", Toast.LENGTH_LONG).show()}
         }
 
         //check edit
@@ -93,30 +115,37 @@ class AddTextNoteFragment : Fragment(), DatePickerDialog.OnDateSetListener,
             titleText.setText(title)
             val description = descriptionNote
             multiLineText.setText(description)
+            if(reminderDate.toString()!="null")
+            textReminder.text = reminderDate!!.time.toString()
         }
         super.onViewCreated(view, savedInstanceState)
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        myDay = day
-        myYear = year-1900
-        myMonth = month
-        val calendar: Calendar = Calendar.getInstance()
-        hour = calendar.get(Calendar.HOUR)
-        minute = calendar.get(Calendar.MINUTE)
+    override fun onDateSet(view: DatePicker?, Year: Int, Month: Int, dayOf: Int) {
+        day = dayOf
+        year = Year
+        month = Month
         val timePickerDialog = TimePickerDialog(this.context, this, hour, minute,
             DateFormat.is24HourFormat(this.context))
         timePickerDialog.show()
     }
-    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-        myHour = hourOfDay
-        myMinute = minute
-        textReminder.text = " "+myYear + "/" + myMonth + "/" + myDay + " at "  + myHour + ":"  + myMinute
-        reminderDate = Date(myYear, myMonth, myDay, myHour, myMinute)
+    @RequiresApi(Build.VERSION_CODES.N)
+    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, Minute: Int) {
+        reminderDate=Calendar.getInstance()
+        hour = hourOfDay
+        minute = Minute
+        textReminder.text = " "+year + "/" + month+1 + "/" + day + " at "  + hour + ":"  + minute
+        reminderDate!!.set(Calendar.MINUTE, minute);
+        reminderDate!!.set(Calendar.HOUR_OF_DAY, hour);
+        reminderDate!!.set(Calendar.MONTH, month);
+        reminderDate!!.set(Calendar.DAY_OF_MONTH, day);
+        reminderDate!!.set(Calendar.YEAR,year);
+        if (reminderDate!!.timeInMillis <= Calendar.getInstance().timeInMillis)
+        {Toast.makeText(this.context!!, "Invalid Time", Toast.LENGTH_LONG).show()}
     }
     @RequiresApi(Build.VERSION_CODES.N)
-    fun scheduleNotification(timeDelay: Long, tag: String, body: String) {
+    fun scheduleNotification(timeDelay: Long, tag: String, body: String):UUID {
 
         val data = Data.Builder().putString("body", body)
 
@@ -130,17 +159,27 @@ class AddTextNoteFragment : Fragment(), DatePickerDialog.OnDateSetListener,
             .build()
 
         WorkManager.getInstance().enqueue(work)
+        return work.id
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun addNote() {
         val title: String? = titleText.text.toString()
         val note: String? = multiLineText.text.toString()
+        var id: UUID?=null
 
         val values = ContentValues()
         values.put("title", title)
         values.put("description", note)
-        values.put("reminderdate", reminderDate.toString())
+        if(reminderDate!=null) {
+            values.put("reminderdate", reminderDate!!.time.toString())
+            var delay: Long = abs(System.currentTimeMillis() - reminderDate!!.time.time)
+            println("this is delay" + delay)
+            id = scheduleNotification(delay / 1000, title!!, note!!)
+        }else values.put("reminderdate", "null")
+
+        values.put("notifid",id.toString())
+
         val dbManager = DbManager(this.requireActivity())
         if (idNote != 0 && idNote != null) {
             val selectionArgs = arrayOf(idNote.toString())
@@ -154,11 +193,7 @@ class AddTextNoteFragment : Fragment(), DatePickerDialog.OnDateSetListener,
                 Toast.makeText(this.requireContext(), "added to database", Toast.LENGTH_LONG).show()
 
         }
-        if (reminderDate.toString()!="null"){
-            var delay:Long= abs(System.currentTimeMillis()- reminderDate!!.time)
-            println("this is delay"+delay)
-            scheduleNotification(delay/1000,title!!,note!!)
-        }
+
     }
 
 }

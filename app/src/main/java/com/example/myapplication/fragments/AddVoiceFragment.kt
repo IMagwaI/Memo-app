@@ -28,12 +28,13 @@ import com.example.myapplication.R
 import com.example.myapplication.localdb.DbManager
 import com.example.myapplication.notif.NotificationSchedule
 import kotlinx.android.synthetic.main.fragment_add_draw.*
+import kotlinx.android.synthetic.main.fragment_add_note.*
 import kotlinx.android.synthetic.main.fragment_add_voice.*
 import kotlinx.android.synthetic.main.fragment_add_voice.save
 import kotlinx.android.synthetic.main.fragment_add_voice.switch1
 import kotlinx.android.synthetic.main.fragment_add_voice.textReminder
+import kotlinx.android.synthetic.main.noteticket.*
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class AddVoiceFragment : Fragment(), DatePickerDialog.OnDateSetListener,
@@ -44,12 +45,8 @@ class AddVoiceFragment : Fragment(), DatePickerDialog.OnDateSetListener,
     var year: Int = 0
     var hour: Int = 0
     var minute: Int = 0
-    var myDay = 0
-    var myMonth: Int = 0
-    var myYear: Int = 0
-    var myHour: Int = 0
-    var myMinute: Int = 0
-    var reminderDate: Date? =null
+    @RequiresApi(Build.VERSION_CODES.N)
+    var reminderDate = Calendar.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,13 +67,14 @@ class AddVoiceFragment : Fragment(), DatePickerDialog.OnDateSetListener,
             if (isChecked) {
                 //DatePicker
                 //TimePicker
-                val calendar: Calendar = Calendar.getInstance()
-                day = calendar.get(Calendar.DAY_OF_MONTH)
-                month = calendar.get(Calendar.MONTH)
-                year = calendar.get(Calendar.YEAR)
-                val datePickerDialog =
-                    DatePickerDialog(this.context!!, this, year, month,day)
-                datePickerDialog.show()
+                val c = Calendar.getInstance()
+                val year = c.get(Calendar.YEAR)
+                val month = c.get(Calendar.MONTH)
+                val day = c.get(Calendar.DAY_OF_MONTH)
+
+                val dpd = DatePickerDialog(this.context!!,this, year, month, day)
+                dpd.datePicker.minDate = c.timeInMillis;
+                dpd.show()
                 textReminder.visibility=View.VISIBLE
             } else {
                 //DeleteNotification
@@ -85,10 +83,14 @@ class AddVoiceFragment : Fragment(), DatePickerDialog.OnDateSetListener,
             }
         }
         save.setOnClickListener {
-            addNote()
-            val intent = Intent(this.context, MainActivity::class.java)
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
+            if (reminderDate==null || reminderDate!!.timeInMillis > Calendar.getInstance().timeInMillis) {
+                val intent = Intent(this.context, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                addNote()
+            }
+            else
+            {Toast.makeText(this.context!!, "Date invalide", Toast.LENGTH_LONG).show()}
         }
     }
 
@@ -102,44 +104,54 @@ class AddVoiceFragment : Fragment(), DatePickerDialog.OnDateSetListener,
     }
     private fun askSpeechInput(){
         if(!SpeechRecognizer.isRecognitionAvailable(this.requireContext())){
-            Toast.makeText(this.requireContext(),"Speech recognition is not available, you must activate google app",Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this.requireContext(),
+                "Speech recognitionis not available",
+                Toast.LENGTH_SHORT
+            ).show()
         }else{
-           val i = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-            i.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            val i = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+            i.putExtra(
+                RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+            )
             i.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
-            i.putExtra(RecognizerIntent.EXTRA_PROMPT,"Say something!")
-            startActivityForResult(i,RQ_SPEECH_REC)
+            i.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say something!")
+            startActivityForResult(i, RQ_SPEECH_REC)
 
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        myDay = day
-        myYear = year
-        myMonth = month
-        val calendar: Calendar = Calendar.getInstance()
-        hour = calendar.get(Calendar.HOUR)
-        minute = calendar.get(Calendar.MINUTE)
-        val timePickerDialog = TimePickerDialog(this.context, this, hour, minute,
-            DateFormat.is24HourFormat(this.context))
+    override fun onDateSet(view: DatePicker?, Year: Int, Month: Int, dayOfMonth: Int) {
+        day = dayOfMonth
+        year = Year
+        month = Month
+        val timePickerDialog = TimePickerDialog(
+            this.context, this, hour, minute,
+            DateFormat.is24HourFormat(this.context)
+        )
         timePickerDialog.show()
     }
-    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, minute: Int) {
-        myHour = hourOfDay
-        myMinute = minute
-        textReminder.text = " "+myYear + "/" + myMonth + "/" + myDay + "at "  + myHour + ":"  + myMinute
-        reminderDate = Date(myYear, myMonth, myDay, myHour, myMinute)
+    @RequiresApi(Build.VERSION_CODES.N)
+    override fun onTimeSet(view: TimePicker?, hourOfDay: Int, Minute: Int) {
+        hour = hourOfDay
+        minute = Minute
+        textReminder.text = " "+year + "/" +(month+1) + "/" + day + "at "  + hour + ":"  + minute
+        reminderDate.set(Calendar.MINUTE, minute)
+        reminderDate.set(Calendar.HOUR, hour)
+        reminderDate.set(Calendar.MONTH, month)
+        reminderDate.set(Calendar.DAY_OF_MONTH, day)
+        reminderDate.set(Calendar.YEAR,year)
     }
     @RequiresApi(Build.VERSION_CODES.N)
-    fun scheduleNotification(timeDelay: Long, tag: String, body: String) {
+    fun scheduleNotification(timeDelay: Long, tag: String, body: String):UUID {
 
         val data = Data.Builder().putString("body", body)
 
         val work = OneTimeWorkRequestBuilder<NotificationSchedule>()
             .setInitialDelay(timeDelay, java.util.concurrent.TimeUnit.SECONDS)
-            .setConstraints(
-                Constraints.Builder().setTriggerContentMaxDelay(1,
+            .setConstraints(Constraints.Builder().setTriggerContentMaxDelay(1,
                 java.util.concurrent.TimeUnit.SECONDS
             ).build()) // API Level 24
             .setInputData(data.build())
@@ -147,34 +159,39 @@ class AddVoiceFragment : Fragment(), DatePickerDialog.OnDateSetListener,
             .build()
 
         WorkManager.getInstance().enqueue(work)
+        return work.id
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun addNote(){
         var title:String?=title.text.toString()
         var note:String?=textDisplay.text.toString()
+        var id: UUID?=null
         val values= ContentValues()
-        values.put("title",title)
-        values.put("description",note)
-        values.put("reminderdate", reminderDate.toString())
+        values.put("title", title)
+        values.put("description", note)
+        if(reminderDate!=null) {
+            values.put("reminderdate", reminderDate!!.time.toString())
+            var delay: Long = Math.abs(System.currentTimeMillis() - reminderDate!!.time.time)
+            println("this is delay" + delay)
+            id = scheduleNotification(delay / 1000, title!!, note!!)
+        }else values.put("reminderdate", "null")
+
+        values.put("notifid",id.toString())
         val dbManager= DbManager(this.requireActivity())
         if(idNote!=0&&idNote!=null){
             val selectionArgs= arrayOf(idNote.toString())
-            val id=dbManager.update(values,"ID=?",selectionArgs)
+            val id=dbManager.update(values, "ID=?", selectionArgs)
             if(id>0)
-                Toast.makeText(this.requireContext(),"database updated",Toast.LENGTH_LONG).show()
+                Toast.makeText(this.requireContext(), "database updated", Toast.LENGTH_LONG).show()
 
         }else {
             val id = dbManager.insertNote(values)
             if(id>0)
-                Toast.makeText(this.requireContext(),"added to database",Toast.LENGTH_LONG).show()
+                Toast.makeText(this.requireContext(), "added to database", Toast.LENGTH_LONG).show()
 
         }
-        if (reminderDate.toString()!="null"){
-            var delay:Long= Math.abs(System.currentTimeMillis() - reminderDate!!.time)
-            println("this is delay"+delay)
-            scheduleNotification(delay/1000,title!!,note!!)
-        }
+
 
     }
 }

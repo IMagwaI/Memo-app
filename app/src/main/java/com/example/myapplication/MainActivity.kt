@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.WorkManager
 import com.example.myapplication.beans.Note
 import com.example.myapplication.localdb.DbManager
 import com.example.myapplication.widget.NewAppWidget
@@ -22,6 +23,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custum_dialog.*
 import kotlinx.android.synthetic.main.noteticket.*
 import kotlinx.android.synthetic.main.noteticket.view.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 /**
@@ -213,6 +216,24 @@ class MainActivity : BaseActivity() {
             myView.delete.setOnClickListener {
                 Toast.makeText(this.context, "working", Toast.LENGTH_SHORT).show()
                 val dbManager = DbManager(this.context!!)
+                if(note.reminderdate!="null")
+                //delete notification
+                {
+                    val projections = arrayOf("ID", "notifid")
+                    var cursor = dbManager.query(
+                        projections,
+                        "ID like ?",
+                        selectionArgs,
+                        "date" + " DESC"
+                    )
+                    if (cursor.moveToFirst()) {
+                        do {
+                            val id = cursor.getString(cursor.getColumnIndex("notifid"))
+                            val workManager = WorkManager.getInstance()
+                            workManager.cancelWorkById(UUID.fromString(id))
+                        } while (cursor.moveToNext())
+                    }
+                }
                 val nbr = dbManager.delete("ID=?", selectionArgs)
                 if (nbr > 0)
                     Toast.makeText(this.context, "note deleted", Toast.LENGTH_SHORT).show()
@@ -296,6 +317,20 @@ class MainActivity : BaseActivity() {
                             "DELETED", Toast.LENGTH_SHORT
                         ).show()
                         val dbManager = DbManager(this.context!!)
+                        //delete notification
+                        val projections = arrayOf("ID", "notifid")
+                        var cursor = dbManager.query(
+                            projections,
+                            "ID like ?",
+                            selectionArgs,
+                            "date" + " DESC"
+                        )
+                        if (cursor.moveToFirst()) {
+                            do {
+                                val id=cursor.getString(cursor.getColumnIndex("notifid"))
+                                val workManager= WorkManager.getInstance()
+                                workManager.cancelWorkById(UUID.fromString(id))
+                            } while (cursor.moveToNext())}
                         val nbr = dbManager.delete("ID=?", selectionArgs)
                         if (nbr > 0)
                             Toast.makeText(this.context, "note deleted", Toast.LENGTH_LONG).show()
@@ -341,6 +376,7 @@ class MainActivity : BaseActivity() {
             intent.putExtra("id", note.id!!)
             intent.putExtra("title", note.title)
             intent.putExtra("description", note.description)
+            intent.putExtra("reminderdate",note.reminderdate)
             startActivity(intent)
         }
     }

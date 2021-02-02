@@ -21,11 +21,14 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager.widget.ViewPager
 import com.example.myapplication.fragments.descriptionNote
 import com.example.myapplication.fragments.idNote
+import com.example.myapplication.fragments.reminderDate
 import com.example.myapplication.fragments.titleNote
 import com.example.myapplication.tabview.MyAdapter
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_add.*
+import kotlinx.android.synthetic.main.noteticket.*
+import java.util.*
 
 /**
  * This activity may contain multiple fragments
@@ -36,6 +39,7 @@ class AddActivity : BaseActivity() {
     lateinit var tabLayout: TabLayout
     lateinit var viewPager: ViewPager
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add)
@@ -45,9 +49,15 @@ class AddActivity : BaseActivity() {
         setSupportActionBar(toolbar)
 
         idNote = intent.getIntExtra("id", 0)
+        reminderDate=null
         if (idNote!! > 0) {
             titleNote = intent.getStringExtra("title")
             descriptionNote = intent.getStringExtra("description")
+            if(intent.getStringExtra("reminderdate")!="null") {
+                reminderDate= Calendar.getInstance()
+                val sdf = SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.ENGLISH)
+                reminderDate!!.time = sdf.parse(intent.getStringExtra("reminderdate"))
+            }
         }
 
 
