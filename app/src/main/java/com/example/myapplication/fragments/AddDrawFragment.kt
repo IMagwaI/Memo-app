@@ -44,7 +44,7 @@ class AddDrawFragment : Fragment() , DatePickerDialog.OnDateSetListener,
     var hour: Int = 0
     var minute: Int = 0
     @RequiresApi(Build.VERSION_CODES.N)
-    var reminderDate = Calendar.getInstance()
+    var reminderDate :Calendar?=null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

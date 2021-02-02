@@ -46,7 +46,7 @@ class AddVoiceFragment : Fragment(), DatePickerDialog.OnDateSetListener,
     var hour: Int = 0
     var minute: Int = 0
     @RequiresApi(Build.VERSION_CODES.N)
-    var reminderDate = Calendar.getInstance()
+    var reminderDate :Calendar?=null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -83,7 +83,7 @@ class AddVoiceFragment : Fragment(), DatePickerDialog.OnDateSetListener,
             }
         }
         save.setOnClickListener {
-            if (reminderDate==null || reminderDate!!.timeInMillis > Calendar.getInstance().timeInMillis) {
+            if (reminderDate==null || reminderDate!!.timeInMillis > Calendar.getInstance().timeInMillis ) {
                 val intent = Intent(this.context, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
@@ -138,11 +138,11 @@ class AddVoiceFragment : Fragment(), DatePickerDialog.OnDateSetListener,
         hour = hourOfDay
         minute = Minute
         textReminder.text = " "+year + "/" +(month+1) + "/" + day + "at "  + hour + ":"  + minute
-        reminderDate.set(Calendar.MINUTE, minute)
-        reminderDate.set(Calendar.HOUR, hour)
-        reminderDate.set(Calendar.MONTH, month)
-        reminderDate.set(Calendar.DAY_OF_MONTH, day)
-        reminderDate.set(Calendar.YEAR,year)
+        reminderDate!!.set(Calendar.MINUTE, minute)
+        reminderDate!!.set(Calendar.HOUR, hour)
+        reminderDate!!.set(Calendar.MONTH, month)
+        reminderDate!!.set(Calendar.DAY_OF_MONTH, day)
+        reminderDate!!.set(Calendar.YEAR,year)
     }
     @RequiresApi(Build.VERSION_CODES.N)
     fun scheduleNotification(timeDelay: Long, tag: String, body: String):UUID {
