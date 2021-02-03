@@ -20,7 +20,7 @@
         android:layout_height="61dp"
         android:layout_below="@+id/tab"
         android:layout_marginTop="0dp"
-        android:background="#FFFFFF" />
+        android:background="@color/colorTabLayout" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"

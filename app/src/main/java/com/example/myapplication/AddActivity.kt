@@ -63,9 +63,9 @@ class AddActivity : BaseActivity() {
 
         tabLayout = findViewById(R.id.tabLayout)
         viewPager = findViewById(R.id.viewPager)
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.mipmap.text))
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.mipmap.microphone))
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.mipmap.pencil))
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_text))
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_microphone))
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_pencil))
         tabLayout.tabGravity = TabLayout.GRAVITY_FILL
 
         val adapter = MyAdapter(

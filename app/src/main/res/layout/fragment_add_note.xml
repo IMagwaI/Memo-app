@@ -45,9 +45,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="#FFFFFF"
+        android:background="@color/colorTabLayout"
         android:text="save"
-        android:textColor="#0C0303"
         android:textSize="18sp" />
 
     <Switch
