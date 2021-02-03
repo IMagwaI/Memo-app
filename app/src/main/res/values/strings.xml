@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">The memo</string>
+    <string name="app_name">MaaNote</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="appwidget_text">EXAMPLE</string>

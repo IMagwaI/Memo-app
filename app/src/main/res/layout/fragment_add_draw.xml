@@ -30,6 +30,20 @@
             app:srcCompat="@mipmap/diskette" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/textReminder"
+        android:layout_width="159dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="170dp"
+        android:layout_marginBottom="24dp"
+        android:layout_toEndOf="@+id/switch1"
+        android:clickable="true"
+        android:hint="Date et heure"
+        android:inputType="none"
+        android:textColor="#9E9E9E"/>
+
     <Switch
         android:id="@+id/switch1"
         android:layout_width="208dp"
@@ -42,19 +56,7 @@
         android:layout_marginBottom="21dp"
         android:switchMinWidth="56dp"
         android:text="Set a reminder:"
+        android:textColor="#050202"
         android:textOff="OFF"
         android:textOn="ON" />
-
-    <TextView
-        android:id="@+id/textReminder"
-        android:layout_width="159dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="170dp"
-        android:layout_marginBottom="24dp"
-        android:layout_toEndOf="@+id/switch1"
-        android:clickable="true"
-        android:hint="Date et heure"
-        android:inputType="none" />
 </RelativeLayout>

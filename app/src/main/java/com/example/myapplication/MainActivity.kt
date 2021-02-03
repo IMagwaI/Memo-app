@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.size
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.WorkManager
@@ -184,7 +185,6 @@ class MainActivity : BaseActivity() {
             val note = listNotesAdapter[position]
             if(note.description == "This is a drawing note, press the note to display it" ){
                 myView.note_img.setImageResource(R.drawable.draw_icon)
-                myView.modifycarrier.visibility = View.GONE
             }
             myView.textTitle.text = note.title
             if(note.description?.length!! > 60){
@@ -214,7 +214,7 @@ class MainActivity : BaseActivity() {
 
 //////////////////////////end testing
             myView.delete.setOnClickListener {
-                Toast.makeText(this.context, "working", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this.context, "working", Toast.LENGTH_SHORT).show()
                 val dbManager = DbManager(this.context!!)
                 if(note.reminderdate!="null")
                 //delete notification
@@ -237,7 +237,17 @@ class MainActivity : BaseActivity() {
                 val nbr = dbManager.delete("ID=?", selectionArgs)
                 if (nbr > 0)
                     Toast.makeText(this.context, "note deleted", Toast.LENGTH_SHORT).show()
-                querySearch("%")
+                    if(listNotes.size==1)
+                    {
+                        val lastNotes = ArrayList<Note>()
+                        val myAdapter = MyNoteAdapter(this.context!!, lastNotes)
+                        myList.adapter = myAdapter
+
+                        //finish()
+                        //startActivity(getIntent())
+                    }
+                    else
+                        querySearch("%")
             }
 
             myView.wholenote.setOnClickListener {
@@ -300,6 +310,8 @@ class MainActivity : BaseActivity() {
                         intent.putExtra("id", note.id!!)
                         intent.putExtra("title", note.title)
                         intent.putExtra("description", note.description)
+                        intent.putExtra("reminderdate",note.reminderdate)
+
                         startActivity(intent)
                     }
 
@@ -345,9 +357,6 @@ class MainActivity : BaseActivity() {
 //                intent.putExtra("img" ,note.img)
 //                startActivity(intent)
                 }
-            }
-            myView.modify.setOnClickListener {
-                goToUpdate(note)
             }
             if (note.reminderdate != "null")
                 myView.reminder.visibility = View.VISIBLE

@@ -31,6 +31,5 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="136sp"
         android:text="Upload your saved data "
-        android:textColor="#100101"
         android:textSize="24sp" />
 </RelativeLayout>

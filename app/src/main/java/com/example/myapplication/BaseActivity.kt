@@ -61,8 +61,8 @@ open class BaseActivity : AppCompatActivity() {
         navigationView = findViewById<View>(R.id.navigation_view) as NavigationView
 
         sharedPreferences = getSharedPreferences("sharedPrefs", MODE_PRIVATE)
-        var editor = sharedPreferences!!.edit()
-        var isDarkModeOn = sharedPreferences!!.getBoolean("isDarkModeOn", false)
+        val editor = sharedPreferences!!.edit()
+        val isDarkModeOn = sharedPreferences!!.getBoolean("isDarkModeOn", false)
         // Setting Navigation View Item Selected Listener to handle the item
         darkModeSwitch =
             navigationView!!.menu.findItem(R.id.nav_darkmode_id).actionView as SwitchCompat
@@ -157,6 +157,6 @@ open class BaseActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return if (drawerToggle?.onOptionsItemSelected(item) == true) {
             true
-        } else super.onOptionsItemSelected(item!!)
+        } else super.onOptionsItemSelected(item)
     }
 }

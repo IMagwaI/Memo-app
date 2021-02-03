@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="7dp"
-    android:background="#F5F5F5"
     android:orientation="vertical">
 
 
@@ -61,27 +60,11 @@
                             android:id="@+id/delete"
                             android:layout_width="25dp"
                             android:layout_height="25dp"
-                            android:background="@color/white"
+                            android:background="#FFFFFF"
                             android:scaleType="centerCrop"
                             android:src="@drawable/ic_baseline_delete_24" />
                     </androidx.cardview.widget.CardView>
 
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/modifycarrier"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_margin="5dp"
-                        android:elevation="10dp"
-                        app:cardCornerRadius="8dp">
-
-                        <ImageView
-                            android:id="@+id/modify"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:background="@android:drawable/ic_menu_edit"
-                            android:contentDescription="modification"
-                            android:scaleType="centerCrop" />
-                    </androidx.cardview.widget.CardView>
                     <androidx.cardview.widget.CardView
                         android:id="@+id/reminder"
                         android:layout_width="25dp"
@@ -94,9 +77,9 @@
                         <ImageView
                             android:layout_width="25dp"
                             android:layout_height="25dp"
-                            android:background="@android:drawable/ic_lock_idle_alarm"
-                            android:contentDescription="delete"
-                            android:scaleType="centerCrop"/>
+                            android:background="#FFFFFF"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_baseline_access_alarm_24" />
                     </androidx.cardview.widget.CardView>
 
 
