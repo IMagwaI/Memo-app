@@ -121,12 +121,12 @@ class AddDrawFragment : Fragment() , DatePickerDialog.OnDateSetListener,
         reminderDate=Calendar.getInstance()
         hour = hourOfDay
         minute = Minute
-        textReminder.text = " "+year + "/" + month+1 + "/" + day + " at "  + hour + ":"  + minute
         reminderDate!!.set(Calendar.MINUTE, minute);
         reminderDate!!.set(Calendar.HOUR_OF_DAY, hour);
         reminderDate!!.set(Calendar.MONTH, month);
         reminderDate!!.set(Calendar.DAY_OF_MONTH, day);
         reminderDate!!.set(Calendar.YEAR,year);
+        textReminder.text = " "+year + "/" + month+1 + "/" + day + " at "  + hour + ":"  + minute
         if (reminderDate!!.timeInMillis <= Calendar.getInstance().timeInMillis)
         {Toast.makeText(this.context!!, "Invalid Time", Toast.LENGTH_LONG).show()}
     }

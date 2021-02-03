@@ -135,6 +135,7 @@ class AddVoiceFragment : Fragment(), DatePickerDialog.OnDateSetListener,
     }
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onTimeSet(view: TimePicker?, hourOfDay: Int, Minute: Int) {
+        reminderDate= Calendar.getInstance()
         hour = hourOfDay
         minute = Minute
         textReminder.text = " "+year + "/" +(month+1) + "/" + day + "at "  + hour + ":"  + minute
