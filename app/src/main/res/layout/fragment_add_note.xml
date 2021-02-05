@@ -3,60 +3,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@mipmap/addnotebackground"
     tools:context=".fragments.AddTextNoteFragment">
-
-    <EditText
-        android:id="@+id/titleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:backgroundTint="#16000000"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Title"
-        android:textAlignment="center"
-        android:textColor="#000000"
-        android:textStyle="bold" />
+    z
 
     <EditText
         android:id="@+id/multiLineText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/titleText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="100sp"
+        android:backgroundTint="#16000000"
         android:ems="10"
         android:gravity="start|top"
         android:inputType="textMultiLine"
         android:maxHeight="300sp"
         android:minHeight="150sp"
-        android:textSize="18sp"
+
         android:textColor="#000000"
-        android:backgroundTint="#16000000"
-
-        />
-
-    <Button
-        android:id="@+id/saveButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="@color/colorTabLayout"
-        android:text="save"
         android:textSize="18sp" />
+
+    <ImageButton
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="30sp"
+        android:layout_marginEnd="10sp"
+        android:backgroundTint="#00FFFFFF"
+        app:srcCompat="@mipmap/diskette" />
 
     <Switch
         android:id="@+id/switch1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/saveButton"
+        android:layout_alignParentBottom="true"
         android:layout_marginLeft="30sp"
         android:layout_marginTop="400dp"
-        android:layout_marginBottom="20sp"
+        android:layout_marginBottom="30sp"
         android:checked="false"
         android:switchMinWidth="56dp"
         android:text="Set a reminder:"
@@ -68,10 +54,11 @@
         android:id="@+id/textReminder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/saveButton"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="0sp"
-        android:layout_marginBottom="24sp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="22dp"
+        android:layout_marginEnd="-22dp"
+        android:layout_marginBottom="35sp"
         android:layout_toEndOf="@+id/switch1"
         android:clickable="true"
         android:hint="Date et heure"

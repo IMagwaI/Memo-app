@@ -5,6 +5,7 @@ package com.example.myapplication.fragments
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.ContentValues
+import android.content.DialogInterface
 import android.content.Intent
 import android.icu.util.Calendar
 import android.os.Build
@@ -12,9 +13,11 @@ import android.os.Bundle
 import android.text.format.DateFormat
 import android.view.*
 import android.widget.DatePicker
+import android.widget.EditText
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.work.Constraints
 import androidx.work.Data
@@ -25,11 +28,8 @@ import com.example.myapplication.R
 import com.example.myapplication.localdb.DbManager
 import com.example.myapplication.notif.NotificationSchedule
 import kotlinx.android.synthetic.main.fragment_add_note.*
-import kotlinx.android.synthetic.main.fragment_add_note.switch1
-import kotlinx.android.synthetic.main.fragment_add_note.textReminder
 import kotlinx.android.synthetic.main.noteticket.*
 import java.lang.Math.abs
-import java.time.LocalDateTime
 import java.util.*
 
 
@@ -69,7 +69,7 @@ class AddTextNoteFragment : Fragment(), DatePickerDialog.OnDateSetListener,
                 val month = c.get(Calendar.MONTH)
                 val day = c.get(Calendar.DAY_OF_MONTH)
 
-                val dpd = DatePickerDialog(this.context!!,this, year, month, day)
+                val dpd = DatePickerDialog(this.context!!, this, year, month, day)
                 dpd.datePicker.minDate = c.timeInMillis;
                 dpd.show()
                 textReminder.visibility=View.VISIBLE
@@ -99,20 +99,30 @@ class AddTextNoteFragment : Fragment(), DatePickerDialog.OnDateSetListener,
             }
         }
         saveButton.setOnClickListener {
-            if (reminderDate==null || reminderDate!!.timeInMillis > Calendar.getInstance().timeInMillis) {
-                val intent = Intent(this.context, MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-                addNote()
-            }
-            else
-            {Toast.makeText(this.context!!, "Date invalide", Toast.LENGTH_LONG).show()}
+            val editText = EditText(this.requireContext());
+            val dialog: AlertDialog = AlertDialog.Builder(this.requireContext())
+                .setTitle("Title")
+                .setView(editText)
+                .setPositiveButton("OK", DialogInterface.OnClickListener { dialogInterface, i ->
+                    val editTextInput: String = editText.getText().toString()
+                    if (reminderDate==null || reminderDate!!.timeInMillis > Calendar.getInstance().timeInMillis) {
+                        val intent = Intent(this.context, MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                        addNote(editTextInput)
+                    }
+                    else
+                    {Toast.makeText(this.context!!, "Date invalide", Toast.LENGTH_LONG).show()}
+
+                })
+                .setNegativeButton("Cancel", null)
+                .create()
+            dialog.show()
         }
 
         //check edit
         if (idNote != 0 && idNote != null) {
-            val title = titleNote
-            titleText.setText(title)
+            //val title = titleNote
             val description = descriptionNote
             multiLineText.setText(description)
             if(reminderDate.toString()!="null")
@@ -126,8 +136,10 @@ class AddTextNoteFragment : Fragment(), DatePickerDialog.OnDateSetListener,
         day = dayOf
         year = Year
         month = Month
-        val timePickerDialog = TimePickerDialog(this.context, this, hour, minute,
-            DateFormat.is24HourFormat(this.context))
+        val timePickerDialog = TimePickerDialog(
+            this.context, this, hour, minute,
+            DateFormat.is24HourFormat(this.context)
+        )
         timePickerDialog.show()
     }
     @RequiresApi(Build.VERSION_CODES.N)
@@ -140,7 +152,7 @@ class AddTextNoteFragment : Fragment(), DatePickerDialog.OnDateSetListener,
         reminderDate!!.set(Calendar.HOUR_OF_DAY, hour);
         reminderDate!!.set(Calendar.MONTH, month);
         reminderDate!!.set(Calendar.DAY_OF_MONTH, day);
-        reminderDate!!.set(Calendar.YEAR,year);
+        reminderDate!!.set(Calendar.YEAR, year);
         if (reminderDate!!.timeInMillis <= Calendar.getInstance().timeInMillis)
         {Toast.makeText(this.context!!, "Invalid Time", Toast.LENGTH_LONG).show()}
     }
@@ -151,9 +163,12 @@ class AddTextNoteFragment : Fragment(), DatePickerDialog.OnDateSetListener,
 
         val work = OneTimeWorkRequestBuilder<NotificationSchedule>()
             .setInitialDelay(timeDelay, java.util.concurrent.TimeUnit.SECONDS)
-            .setConstraints(Constraints.Builder().setTriggerContentMaxDelay(1,
-                java.util.concurrent.TimeUnit.SECONDS
-            ).build()) // API Level 24
+            .setConstraints(
+                Constraints.Builder().setTriggerContentMaxDelay(
+                    1,
+                    java.util.concurrent.TimeUnit.SECONDS
+                ).build()
+            ) // API Level 24
             .setInputData(data.build())
             .addTag(tag)
             .build()
@@ -162,9 +177,8 @@ class AddTextNoteFragment : Fragment(), DatePickerDialog.OnDateSetListener,
         return work.id
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun addNote() {
-        val title: String? = titleText.text.toString()
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun addNote(title:String?) {
         val note: String? = multiLineText.text.toString()
         var id: UUID?=null
 
@@ -178,7 +192,7 @@ class AddTextNoteFragment : Fragment(), DatePickerDialog.OnDateSetListener,
             id = scheduleNotification(delay / 1000, title!!, note!!)
         }else values.put("reminderdate", "null")
 
-        values.put("notifid",id.toString())
+        values.put("notifid", id.toString())
 
         val dbManager = DbManager(this.requireActivity())
         if (idNote != 0 && idNote != null) {

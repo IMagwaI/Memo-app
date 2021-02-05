@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.ContentValues
+import android.content.DialogInterface
 import android.content.Intent
 import android.icu.util.Calendar
 import android.os.Build
@@ -15,9 +16,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
+import android.widget.EditText
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.work.Constraints
 import androidx.work.Data
@@ -83,14 +86,25 @@ class AddVoiceFragment : Fragment(), DatePickerDialog.OnDateSetListener,
             }
         }
         save.setOnClickListener {
-            if (reminderDate==null || reminderDate!!.timeInMillis > Calendar.getInstance().timeInMillis ) {
-                val intent = Intent(this.context, MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-                addNote()
-            }
-            else
-            {Toast.makeText(this.context!!, "Date invalide", Toast.LENGTH_LONG).show()}
+            val editText = EditText(this.requireContext());
+            val dialog: AlertDialog = AlertDialog.Builder(this.requireContext())
+                .setTitle("Title")
+                .setView(editText)
+                .setPositiveButton("OK", DialogInterface.OnClickListener { dialogInterface, i ->
+                    val editTextInput: String = editText.getText().toString()
+                    if (reminderDate==null || reminderDate!!.timeInMillis > Calendar.getInstance().timeInMillis) {
+                        val intent = Intent(this.context, MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                        startActivity(intent)
+                        addNote(editTextInput)
+                    }
+                    else
+                    {Toast.makeText(this.context!!, "Date invalide", Toast.LENGTH_LONG).show()}
+
+                })
+                .setNegativeButton("Cancel", null)
+                .create()
+            dialog.show()
         }
     }
 
@@ -164,9 +178,8 @@ class AddVoiceFragment : Fragment(), DatePickerDialog.OnDateSetListener,
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    fun addNote(){
-        var title:String?=title.text.toString()
-        var note:String?=textDisplay.text.toString()
+    fun addNote(title:String){
+        val note:String=textDisplay.text.toString()
         var id: UUID?=null
         val values= ContentValues()
         values.put("title", title)

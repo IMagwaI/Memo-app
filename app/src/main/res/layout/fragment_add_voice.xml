@@ -17,27 +17,11 @@
         android:background="@drawable/mic" />
 
     <EditText
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:backgroundTint="#16000000"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Title"
-        android:textAlignment="center"
-        android:textColor="#000"
-        android:textStyle="bold" />
-
-    <EditText
         android:id="@+id/textDisplay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20sp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="100sp"
         android:backgroundTint="#00FFFFFF"
         android:ems="10"
         android:gravity="start|top"
@@ -46,15 +30,16 @@
         android:minHeight="100sp"
         android:textColor="#000" />
 
-    <Button
+    <ImageButton
         android:id="@+id/save"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="@color/colorTabLayout"
-        android:text="save"
-        android:textSize="18sp" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="30sp"
+        android:layout_marginEnd="10sp"
+        android:backgroundTint="#00FFFFFF"
+        app:srcCompat="@mipmap/diskette" />
 
     <TextView
         android:id="@+id/textView2"
@@ -70,9 +55,9 @@
         android:id="@+id/switch1"
         android:layout_width="180sp"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/save"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="30sp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="26dp"
         android:layout_marginBottom="20sp"
         android:switchMinWidth="56sp"
         android:text="Set a reminder:"
@@ -84,9 +69,9 @@
         android:id="@+id/textReminder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/save"
-        android:layout_marginStart="0sp"
-        android:layout_marginBottom="24sp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginBottom="25sp"
         android:layout_toEndOf="@+id/switch1"
         android:clickable="true"
         android:hint="Date et heure"

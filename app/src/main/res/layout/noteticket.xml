@@ -8,12 +8,12 @@
     android:orientation="vertical">
 
 
-<!--    android:background="@drawable/background_layout"  dial linearlayout li -->
+<!--    android:background="@drawable/ticket_background"  dial linearlayout li -->
     <LinearLayout
         android:id="@+id/wholenote"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_layout"
+        android:background="@drawable/ticket_background"
         android:orientation="vertical">
 
         <LinearLayout
@@ -83,7 +83,6 @@
                     </androidx.cardview.widget.CardView>
 
 
-
                     <TextView
                         android:id="@+id/textTitle"
                         android:layout_width="match_parent"
@@ -91,7 +90,7 @@
                         android:layout_marginLeft="5dp"
                         android:layout_marginTop="5dp"
                         android:text="title"
-                        android:textColor="#004e92"
+                        android:textColor="#5199D8"
                         android:textSize="14sp" />
 
                 </LinearLayout>
@@ -103,7 +102,6 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="5dp"
                     android:text="TextView"
-                    android:textColor="#575454"
                     android:textSize="12sp" />
 
             </LinearLayout>
