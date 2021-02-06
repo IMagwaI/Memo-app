@@ -26,7 +26,7 @@ class AboutUsActivity: BaseActivity() {
             .isRTL(false)
             .enableDarkMode(isDarkModeOn)
             .setDescription("This app has been developped by Oumaima, Ayoub and Abdelkader")
-            .setImage(R.mipmap.mylogofinal)
+            .setImage(R.drawable.garfield_aboutus)
             .addItem(Element("version : 1.0.0", null))
             .addGroup("Connect with us")
             .addEmail("Note@gmail.com")
