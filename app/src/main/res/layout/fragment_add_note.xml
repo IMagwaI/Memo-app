@@ -85,14 +85,18 @@
                 android:layout_marginStart="30sp"
                 android:layout_marginTop="400dp"
                 android:layout_marginBottom="30sp"
-                android:text="Set a password" />
+                android:text="Set a password"
+                android:textOff="OFF"
+                android:textOn="ON"/>
 
             <TextView
                 android:id="@+id/textPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30sp"
-                android:hint="No password" />
+                android:hint="No password"
+                android:inputType="none"
+                android:textColor="#6E6E6E"/>
         </LinearLayout>
 
     </LinearLayout>

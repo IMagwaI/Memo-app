@@ -60,6 +60,7 @@ class AddTextNoteFragment : Fragment(), DatePickerDialog.OnDateSetListener,
         setHasOptionsMenu(true)
         print("print this HAHA $reminderDate")
         switch1.isChecked = reminderDate!=null
+        switch2.isChecked = passwordNote!=""
         switch1?.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 //DatePicker
@@ -150,9 +151,6 @@ class AddTextNoteFragment : Fragment(), DatePickerDialog.OnDateSetListener,
             val password = passwordNote
             multiLineText.setText(description)
             textPassword.setText(password)
-            if(password != ""){
-//                switch2.setChecked(true)
-            }
             if(reminderDate.toString()!="null")
             textReminder.text = reminderDate!!.time.toString()
         }
