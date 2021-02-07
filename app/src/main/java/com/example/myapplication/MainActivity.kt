@@ -3,8 +3,10 @@ package com.example.myapplication
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
+import android.icu.util.Calendar
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
@@ -17,11 +19,13 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.WorkManager
 import com.example.myapplication.beans.Note
+import com.example.myapplication.fragments.reminderDate
 import com.example.myapplication.localdb.DbManager
 import com.example.myapplication.widget.NewAppWidget
 import com.example.myapplication.widget.WidgetData
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.custum_dialog.*
+import kotlinx.android.synthetic.main.fragment_add_note.*
 import kotlinx.android.synthetic.main.noteticket.*
 import kotlinx.android.synthetic.main.noteticket.view.*
 import java.util.*
@@ -95,7 +99,7 @@ class MainActivity : BaseActivity() {
 
     fun searchBar(search: String) {
         var dbManager = DbManager(this)
-        val projections = arrayOf("ID", "title", "description", "date", "reminderdate")
+        val projections = arrayOf("ID", "title", "description", "date", "reminderdate","password")
         val selectionArgs = arrayOf(search)
         var cursor = dbManager.query(projections, "title like ?", selectionArgs, "date" + " DESC")
         if (cursor.moveToFirst()) {
@@ -117,7 +121,7 @@ class MainActivity : BaseActivity() {
 
     fun querySearch(search: String) {
         var dbManager = DbManager(this)
-        val projections = arrayOf("ID", "title", "description", "date", "reminderdate","img")
+        val projections = arrayOf("ID", "title", "description", "date", "reminderdate","img","password")
         val selectionArgs = arrayOf(search)
         var cursor = dbManager.query(projections, "ID like ?", selectionArgs, "date" + " DESC")
         var countmemos: Int = cursor.count
@@ -135,12 +139,14 @@ class MainActivity : BaseActivity() {
                 val date = cursor.getString(3)
                 val reminderDate = cursor.getString(cursor.getColumnIndex("reminderdate"))
                 val img = cursor.getBlob(cursor.getColumnIndex("img"))
+                val password = cursor.getString(cursor.getColumnIndex("password"))
+
 
                 println("data = " + id.toString() + " " + title + " " + description + " " + date + " " + reminderDate)
                 try {
-                    listNotes.add(Note(id, title, description, date,img,reminderDate))
+                    listNotes.add(Note(id, title, description, date,img,reminderDate,password))
                 }catch (e:Exception){
-                    listNotes.add(Note(id, title, description, date, reminderDate))
+                    listNotes.add(Note(id, title, description, date, reminderDate,password))
                 }
 
             } while (cursor.moveToNext())
@@ -187,10 +193,16 @@ class MainActivity : BaseActivity() {
                 myView.note_img.setImageResource(R.drawable.draw_icon)
             }
             myView.textTitle.text = note.title
-            if(note.description?.length!! > 60){
-                myView.textView.text = note.description?.take(60) + "..."
+            if(note.password == "") {
+                if (note.description?.length!! > 60) {
+                    myView.textView.text = note.description?.take(60) + "..."
+                } else {
+                    myView.textView.text = note.description
+                }
             }else{
-            myView.textView.text = note.description}
+                myView.lock.visibility= View.VISIBLE
+                myView.textView.text = "This note is protected with a password"
+            }
             myView.date.text = note.date
             val selectionArgs = arrayOf(note.id.toString())
             val dbManager = DbManager(this.context!!)
@@ -252,7 +264,7 @@ class MainActivity : BaseActivity() {
 
             myView.wholenote.setOnClickListener {
                 val dialogBuilder = AlertDialog.Builder(this@MainActivity)
-
+                if (note.password == "") {
 
                 if (note.description == "This is a drawing note, press the note to display it") {
 
@@ -264,43 +276,12 @@ class MainActivity : BaseActivity() {
 
                     startActivity(intent)
 
-//                    builder.setTitle("This is a draw memo")
-
-//                    val c = db.rawQuery("select * from img", null)
-//                    if (c.moveToNext())
-//                    {
-//                        val image = c.getBlob(0)
-//                        val bmp = BitmapFactory.decodeByteArray(image, 0, image.size)
-//                        imageView.setImageBitmap(bmp)
-//                        Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show()
-//                    }
                 } else {
                     dialogBuilder.setTitle(note.title)
                     dialogBuilder.setMessage(note.description)
 
-//                    dialogBuilder.setView(R.layout.custum_dialog)
-
                     dialogBuilder.setIcon(R.drawable.writing_note_ready)
-//                    titleNote.text = Editable.Factory.getInstance().newEditable(note.title)
-//                    titleNote.setText(note.title)
-//                    textNote.setText(note.description)
-//                    BtnUpdate.setOnClickListener {
-//                        val newtitle = titleNote.text.toString()
-//                        val newmsg = textNote.text.toString()
-//                        val values = ContentValues()
-//                        values.put("title", newtitle)
-//                        values.put("description", newmsg)
-//                        val dbManager = DbManager(this@MainActivity)
-//                        if (idNote != 0 && idNote != null) {
-//                            val selectionArgs = arrayOf(idNote.toString())
-//                            val id = dbManager.update(values, "ID=?", selectionArgs)
-//                            if (id > 0)
-//                                Toast.makeText(this@MainActivity, "database updated", Toast.LENGTH_LONG).show()
-//
-//                        }
-//
-//                    }
-//builder.setPositiveButton("OK", DialogInterface.OnClickListener(function = x))
+
                     dialogBuilder.setPositiveButton("EDIT") { dialog, which ->
                         Toast.makeText(
                             applicationContext,
@@ -310,7 +291,9 @@ class MainActivity : BaseActivity() {
                         intent.putExtra("id", note.id!!)
                         intent.putExtra("title", note.title)
                         intent.putExtra("description", note.description)
-                        intent.putExtra("reminderdate",note.reminderdate)
+                        intent.putExtra("reminderdate", note.reminderdate)
+                        intent.putExtra("password", note.password)
+
 
                         startActivity(intent)
                     }
@@ -339,24 +322,102 @@ class MainActivity : BaseActivity() {
                         )
                         if (cursor.moveToFirst()) {
                             do {
-                                val id=cursor.getString(cursor.getColumnIndex("notifid"))
-                                val workManager= WorkManager.getInstance()
+                                val id = cursor.getString(cursor.getColumnIndex("notifid"))
+                                val workManager = WorkManager.getInstance()
                                 workManager.cancelWorkById(UUID.fromString(id))
-                            } while (cursor.moveToNext())}
+                            } while (cursor.moveToNext())
+                        }
                         val nbr = dbManager.delete("ID=?", selectionArgs)
                         if (nbr > 0)
                             Toast.makeText(this.context, "note deleted", Toast.LENGTH_LONG).show()
                         querySearch("%")
                     }
                     dialogBuilder.show()
-//                Toast.makeText(this.context, "working touch", Toast.LENGTH_LONG).show()
-//                val intent = Intent(this.context, NoteViewer::class.java)
-//                intent.putExtra("id", note.id!!)
-//                intent.putExtra("title", note.title)
-//                intent.putExtra("description", note.description)
-//                intent.putExtra("img" ,note.img)
-//                startActivity(intent)
                 }
+            }else{
+                    val typedpassword = EditText(this.context)
+                    val dialog: AlertDialog = AlertDialog.Builder(this.context!!)
+                        .setTitle("Enter your password")
+                        .setView(typedpassword)
+                        .setPositiveButton("OK", DialogInterface.OnClickListener { dialogInterface, i ->
+                            val checkpassword: String = typedpassword.getText().toString()
+                            if (checkpassword == note.password){
+                                if (note.description == "This is a drawing note, press the note to display it") {
+
+                                    val intent = Intent(this.context, DrawShowActivity::class.java)
+                                    intent.putExtra("id", note.id!!)
+                                    intent.putExtra("title", note.title)
+                                    intent.putExtra("description", note.description)
+                                    intent.putExtra("img", note.img)
+
+                                    startActivity(intent)
+
+                                } else {
+                                    dialogBuilder.setTitle(note.title)
+                                    dialogBuilder.setMessage(note.description)
+                                    dialogBuilder.setIcon(R.drawable.writing_note_ready)
+
+                                    dialogBuilder.setPositiveButton("EDIT") { dialog, which ->
+                                        val intent = Intent(this.context, AddActivity::class.java)
+                                        intent.putExtra("id", note.id!!)
+                                        intent.putExtra("title", note.title)
+                                        intent.putExtra("description", note.description)
+                                        intent.putExtra("reminderdate", note.reminderdate)
+                                        intent.putExtra("password",note.password)
+
+                                        startActivity(intent)
+                                    }
+
+                                    dialogBuilder.setNegativeButton("CANCEL") { dialog, which ->
+                                        Toast.makeText(
+                                            applicationContext,
+                                            android.R.string.no, Toast.LENGTH_SHORT
+                                        ).show()
+
+                                    }
+
+                                    dialogBuilder.setNeutralButton("DELETE") { dialog, which ->
+                                        Toast.makeText(
+                                            applicationContext,
+                                            "DELETED", Toast.LENGTH_SHORT
+                                        ).show()
+                                        val dbManager = DbManager(this.context!!)
+                                        //delete notification
+                                        val projections = arrayOf("ID", "notifid")
+                                        var cursor = dbManager.query(
+                                            projections,
+                                            "ID like ?",
+                                            selectionArgs,
+                                            "date" + " DESC"
+                                        )
+                                        if (cursor.moveToFirst()) {
+                                            do {
+                                                val id = cursor.getString(cursor.getColumnIndex("notifid"))
+                                                val workManager = WorkManager.getInstance()
+                                                workManager.cancelWorkById(UUID.fromString(id))
+                                            } while (cursor.moveToNext())
+                                        }
+                                        val nbr = dbManager.delete("ID=?", selectionArgs)
+                                        if (nbr > 0)
+                                            Toast.makeText(this.context, "note deleted", Toast.LENGTH_LONG).show()
+                                        querySearch("%")
+                                    }
+                                    dialogBuilder.show()
+                                }
+
+                            }else{
+                                Toast.makeText(
+                                    applicationContext,
+                                    "Password incorrect!", Toast.LENGTH_SHORT
+                                ).show()
+                            }
+
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .create()
+                    dialog.show()
+
+            }
             }
             if (note.reminderdate != "null")
                 myView.reminder.visibility = View.VISIBLE

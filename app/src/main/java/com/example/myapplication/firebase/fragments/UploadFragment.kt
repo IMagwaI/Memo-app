@@ -56,7 +56,9 @@ class UploadFragment : Fragment(){
                                 ds.child("description").value.toString(),
                                 ds.child("date").value.toString(),
                                 ds.child("imgS").value.toString(),
-                                ds.child("reminderdate").value.toString()
+                                ds.child("reminderdate").value.toString(),
+                                ds.child("password").value.toString()
+
                             )
                         }
 
@@ -77,10 +79,10 @@ class UploadFragment : Fragment(){
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun addNote(title: String, note: String, date: String, imgS: String, reminderdate: String){
+    fun addNote(title: String, note: String, date: String, imgS: String, reminderdate: String,password:String){
         var check=true
         for(l in savedListNotes){
-            if (l.title==title&&l.description==note&&l.date==date&&l.imgS==imgS&&l.reminderdate==reminderdate)
+            if (l.title==title&&l.description==note&&l.date==date&&l.imgS==imgS&&l.reminderdate==reminderdate&&l.password==password)
                 check=false
         }
         try {
@@ -92,6 +94,7 @@ class UploadFragment : Fragment(){
                 val decodedByte: ByteArray = Base64.getDecoder().decode(imgS)
                 values.put("img", decodedByte)
                 values.put("date", date)
+                values.put("password",password)
 
 
                 val dbManager = DbManager(this.requireActivity())
@@ -112,7 +115,7 @@ class UploadFragment : Fragment(){
     @RequiresApi(Build.VERSION_CODES.O)
     fun querySearch(search: String) {
         var dbManager = DbManager(this.requireContext())
-        val projections = arrayOf("ID", "title", "description", "date", "img", "reminderdate")
+        val projections = arrayOf("ID", "title", "description", "date", "img", "reminderdate","password")
         val selectionArgs = arrayOf(search)
         var cursor = dbManager.query(projections, "ID like ?", selectionArgs, "ID")
         try {
@@ -125,6 +128,8 @@ class UploadFragment : Fragment(){
                     val img = cursor.getBlob(cursor.getColumnIndex("img"))
                     val reminderDate = cursor.getString(cursor.getColumnIndex("reminderdate"))
                     val date = cursor.getString(3)
+                    val password = cursor.getString(cursor.getColumnIndex("password"))
+
                     try {
                         val base64Encoded = Base64.getEncoder().encodeToString(img)
                         savedListNotes.add(
@@ -134,11 +139,12 @@ class UploadFragment : Fragment(){
                                 description,
                                 date,
                                 base64Encoded,
-                                reminderDate
+                                reminderDate,
+                                password
                             )
                         )
                     } catch (e: Exception) {
-                        savedListNotes.add(Note(id, title, description, date, reminderDate))
+                        savedListNotes.add(Note(id, title, description, date, reminderDate,password))
 
                     }
 

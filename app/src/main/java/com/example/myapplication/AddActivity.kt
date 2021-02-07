@@ -19,14 +19,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.viewpager.widget.ViewPager
-import com.example.myapplication.fragments.descriptionNote
-import com.example.myapplication.fragments.idNote
+import com.example.myapplication.fragments.*
 import com.example.myapplication.fragments.reminderDate
-import com.example.myapplication.fragments.titleNote
 import com.example.myapplication.tabview.MyAdapter
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_add.*
+import kotlinx.android.synthetic.main.fragment_add_note.*
 import kotlinx.android.synthetic.main.noteticket.*
 import java.util.*
 
@@ -49,6 +48,7 @@ class AddActivity : BaseActivity() {
         setSupportActionBar(toolbar)
 
         idNote = intent.getIntExtra("id", 0)
+        passwordNote = intent.getStringExtra("password")
         reminderDate=null
         if (idNote!! > 0) {
             titleNote = intent.getStringExtra("title")

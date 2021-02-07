@@ -3,7 +3,7 @@ package com.example.myapplication.fragments
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.ContentValues
-import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Bitmap
 import android.icu.util.Calendar
@@ -14,9 +14,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
+import android.widget.EditText
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.work.Constraints
@@ -27,11 +29,13 @@ import com.example.myapplication.*
 import com.example.myapplication.localdb.DbManager
 import com.example.myapplication.notif.NotificationSchedule
 import dev.sasikanth.colorsheet.ColorSheet
-import kotlinx.android.synthetic.main.activity_add.*
 import kotlinx.android.synthetic.main.fragment_add_draw.*
+import kotlinx.android.synthetic.main.fragment_add_draw.save
 import kotlinx.android.synthetic.main.fragment_add_draw.switch1
+import kotlinx.android.synthetic.main.fragment_add_draw.switch2
+import kotlinx.android.synthetic.main.fragment_add_draw.textPassword
 import kotlinx.android.synthetic.main.fragment_add_draw.textReminder
-import kotlinx.android.synthetic.main.fragment_add_note.*
+import kotlinx.android.synthetic.main.fragment_add_voice.*
 import java.io.ByteArrayOutputStream
 import java.util.*
 
@@ -93,12 +97,33 @@ class AddDrawFragment : Fragment() , DatePickerDialog.OnDateSetListener,
 
             }
         }
+        switch2.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                val password = EditText(this.context)
+                val dialog: AlertDialog = AlertDialog.Builder(this.context!!)
+                    .setTitle("Password")
+                    .setView(password)
+                    .setPositiveButton("OK", DialogInterface.OnClickListener { dialogInterface, i ->
+                        val editTextPassword: String = password.getText().toString()
+                        textPassword.setText(editTextPassword)
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .create()
+                dialog.show()} else{
+                textPassword.setText("")
+            }
+        }
         save.setOnClickListener {
             if (reminderDate==null || reminderDate!!.timeInMillis > Calendar.getInstance().timeInMillis) {
                 val intent = Intent(this.context, MainActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
-                addNote()
+                if(switch2.isChecked){
+                    addNote(textPassword.getText().toString())
+                }else{
+                    addNote("")
+
+                }
             }
             else
             {
@@ -149,7 +174,7 @@ class AddDrawFragment : Fragment() , DatePickerDialog.OnDateSetListener,
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    private fun addNote() {
+    private fun addNote(password:String?) {
         val title: String = "Draw ("+extraBitmap.generationId.toString()+")"
         val note: String = "This is a drawing note, press the note to display it"
         val bitmap: Bitmap = extraBitmap
@@ -163,6 +188,7 @@ class AddDrawFragment : Fragment() , DatePickerDialog.OnDateSetListener,
         values.put("title", title)
         values.put("description", note)
         values.put("img", img)
+        values.put("password",password)
         /*try {
             values.put("reminderdate", reminderDate.toString())
         }catch (e: Exception) {

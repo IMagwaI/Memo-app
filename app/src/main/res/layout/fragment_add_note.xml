@@ -35,33 +35,66 @@
         android:backgroundTint="#00FFFFFF"
         app:srcCompat="@mipmap/diskette" />
 
-    <Switch
-        android:id="@+id/switch1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="30sp"
-        android:layout_marginTop="400dp"
-        android:layout_marginBottom="30sp"
-        android:checked="false"
-        android:switchMinWidth="56dp"
-        android:text="Set a reminder:"
-        android:textColor="#070101"
-        android:textOff="OFF"
-        android:textOn="ON" />
-
-    <TextView
-        android:id="@+id/textReminder"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="22dp"
-        android:layout_marginEnd="-22dp"
-        android:layout_marginBottom="35sp"
-        android:layout_toEndOf="@+id/switch1"
-        android:clickable="true"
-        android:hint="Date et heure"
-        android:inputType="none"
-        android:textColor="#6E6E6E" />
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <Switch
+                android:id="@+id/switch1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30sp"
+                android:layout_marginTop="400dp"
+                android:layout_marginBottom="30sp"
+                android:checked="false"
+                android:switchMinWidth="56dp"
+                android:text="Set a reminder:"
+                android:textColor="#070101"
+                android:textOff="OFF"
+                android:textOn="ON" />
+
+            <TextView
+                android:id="@+id/textReminder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="-22dp"
+                android:layout_marginBottom="35sp"
+                android:clickable="true"
+                android:hint="Date et heure"
+                android:inputType="none"
+                android:textColor="#6E6E6E" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Switch
+                android:id="@+id/switch2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30sp"
+                android:layout_marginTop="400dp"
+                android:layout_marginBottom="30sp"
+                android:text="Set a password" />
+
+            <TextView
+                android:id="@+id/textPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30sp"
+                android:hint="No password" />
+        </LinearLayout>
+
+    </LinearLayout>
+
 </RelativeLayout>

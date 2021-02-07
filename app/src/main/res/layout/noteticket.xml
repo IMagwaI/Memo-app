@@ -66,6 +66,22 @@
                     </androidx.cardview.widget.CardView>
 
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/lock"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_margin="5dp"
+                        android:elevation="10dp"
+                        app:cardCornerRadius="8dp"
+                        android:visibility="invisible">
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:background="#00FFFFFF"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_baseline_lock_24" />
+                    </androidx.cardview.widget.CardView>
+                    <androidx.cardview.widget.CardView
                         android:id="@+id/reminder"
                         android:layout_width="25dp"
                         android:layout_height="25dp"

@@ -73,7 +73,7 @@ class SaveFragment : Fragment(){
     @RequiresApi(Build.VERSION_CODES.O)
     fun querySearch(search: String) {
         var dbManager = DbManager(this.requireContext())
-        val projections = arrayOf("ID", "title", "description", "date", "img", "reminderdate")
+        val projections = arrayOf("ID", "title", "description", "date", "img", "reminderdate","password")
         val selectionArgs = arrayOf(search)
         var cursor = dbManager.query(projections, "ID like ?", selectionArgs, "ID")
         if (cursor.moveToFirst()) {
@@ -85,18 +85,20 @@ class SaveFragment : Fragment(){
                 val img = cursor.getBlob(cursor.getColumnIndex("img"))
                 val reminderDate=cursor.getString(cursor.getColumnIndex("reminderdate"))
                 val date = cursor.getString(3)
+                val password = cursor.getString(cursor.getColumnIndex("password"))
+
                 try {
                     val base64Encoded = Base64.getEncoder().encodeToString(img)
-                    saveListNotes.add(Note(id, title, description, date, base64Encoded, reminderDate))
+                    saveListNotes.add(Note(id, title, description, date, base64Encoded, reminderDate,password))
                 }catch (e: Exception){
-                    saveListNotes.add(Note(id, title, description, date, reminderDate))
+                    saveListNotes.add(Note(id, title, description, date, reminderDate,password))
                 }
 
             } while (cursor.moveToNext())
         }
         println("----------------------------------------")
-        println(saveListNotes.get(0).img)
-        println(saveListNotes.get(1).img)
+//        println(saveListNotes.get(0).img)
+//        println(saveListNotes.get(1).img)
 
         dbManager.sqlDB!!.close()
     }
