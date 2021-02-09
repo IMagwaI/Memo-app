@@ -4,10 +4,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <com.example.myapplication.PaintView
         android:id="@+id/myPaintview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomLayout"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0sp"
+        android:layout_marginBottom="0sp" />
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -31,8 +36,12 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/bottomLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="70sp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="0sp"
+        android:background="@color/colorBackground"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -45,8 +54,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30sp"
-                android:layout_marginTop="400dp"
-                android:layout_marginBottom="30sp"
+                android:layout_marginTop="5sp"
+                android:layout_marginBottom="10sp"
                 android:checked="false"
                 android:switchMinWidth="56dp"
                 android:text="Set a reminder:"
@@ -60,17 +69,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginEnd="-22dp"
-                android:layout_marginBottom="35sp"
                 android:clickable="true"
                 android:hint="Date et heure"
                 android:inputType="none"
-                android:textColor="#6E6E6E" />
+                android:textColor="#070101" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <Switch
@@ -78,16 +86,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30sp"
-                android:layout_marginTop="400dp"
-                android:layout_marginBottom="30sp"
-                android:text="Set a password" />
+                android:layout_marginTop="5sp"
+                android:layout_marginBottom="10sp"
+                android:text="Set a password"
+                android:textColor="#070101" />
 
             <TextView
                 android:id="@+id/textPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30sp"
-                android:hint="No password" />
+                android:hint="No password"
+                android:textColor="#070101" />
         </LinearLayout>
 
     </LinearLayout>

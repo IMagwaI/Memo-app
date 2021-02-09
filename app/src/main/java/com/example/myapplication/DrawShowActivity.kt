@@ -6,7 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 
-class DrawShowActivity : AppCompatActivity() {
+class DrawShowActivity : BaseActivity() {
         var id:Int?=null
 
         override fun onCreate(savedInstanceState: Bundle?) {

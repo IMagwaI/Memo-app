@@ -55,7 +55,7 @@ open class BaseActivity : AppCompatActivity() {
             R.string.app_name,
             R.string.app_name
         )
-        drawerLayout!!.setDrawerListener(drawerToggle)
+        drawerLayout!!.addDrawerListener(drawerToggle!!)
         supportActionBar!!.setHomeButtonEnabled(true)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         navigationView = findViewById<View>(R.id.navigation_view) as NavigationView
@@ -76,7 +76,7 @@ open class BaseActivity : AppCompatActivity() {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             navigationView!!.menu.findItem(R.id.nav_darkmode_id).title = "Day Mode"
         }
-        darkModeSwitch!!.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+        darkModeSwitch!!.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { _, isChecked ->
             //your action
             if (!isChecked) {
                 // Switch is unchecked - DAY MODE
