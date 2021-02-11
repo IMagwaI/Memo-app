@@ -28,7 +28,6 @@ import com.example.myapplication.R
 import com.example.myapplication.localdb.DbManager
 import com.example.myapplication.notif.NotificationSchedule
 import kotlinx.android.synthetic.main.fragment_add_note.*
-import kotlinx.android.synthetic.main.noteticket.*
 import java.lang.Math.abs
 import java.util.*
 
@@ -36,6 +35,7 @@ import java.util.*
 var idNote: Int? = null
 var titleNote:String?=""
 var descriptionNote:String?=""
+var passwordNote:String?=""
 @RequiresApi(Build.VERSION_CODES.N)
 var reminderDate :Calendar?=null
 
@@ -60,6 +60,7 @@ class AddTextNoteFragment : Fragment(), DatePickerDialog.OnDateSetListener,
         setHasOptionsMenu(true)
         print("print this HAHA $reminderDate")
         switch1.isChecked = reminderDate!=null
+        switch2.isChecked = passwordNote!=""
         switch1?.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 //DatePicker
@@ -98,8 +99,25 @@ class AddTextNoteFragment : Fragment(), DatePickerDialog.OnDateSetListener,
                 reminderDate=null
             }
         }
+        switch2.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                val password = EditText(this.requireContext())
+                val dialog: AlertDialog = AlertDialog.Builder(this.requireContext())
+                    .setTitle("Password")
+                    .setView(password)
+                    .setPositiveButton("OK", DialogInterface.OnClickListener { dialogInterface, i ->
+                        val editTextPassword: String = password.getText().toString()
+                        textPassword.setText(editTextPassword)
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .create()
+                dialog.show()}
+            else{
+                textPassword.setText("")
+                }
+        }
         saveButton.setOnClickListener {
-            val editText = EditText(this.requireContext());
+            val editText = EditText(this.requireContext())
             val dialog: AlertDialog = AlertDialog.Builder(this.requireContext())
                 .setTitle("Title")
                 .setView(editText)
@@ -109,7 +127,13 @@ class AddTextNoteFragment : Fragment(), DatePickerDialog.OnDateSetListener,
                         val intent = Intent(this.context, MainActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
                         startActivity(intent)
-                        addNote(editTextInput)
+                        if(switch2.isChecked){
+                            addNote(editTextInput,textPassword.getText().toString())
+                        }else{
+                            addNote(editTextInput,"")
+
+                        }
+
                     }
                     else
                     {Toast.makeText(this.context!!, "Date invalide", Toast.LENGTH_LONG).show()}
@@ -124,7 +148,9 @@ class AddTextNoteFragment : Fragment(), DatePickerDialog.OnDateSetListener,
         if (idNote != 0 && idNote != null) {
             //val title = titleNote
             val description = descriptionNote
+            val password = passwordNote
             multiLineText.setText(description)
+            textPassword.setText(password)
             if(reminderDate.toString()!="null")
             textReminder.text = reminderDate!!.time.toString()
         }
@@ -178,14 +204,14 @@ class AddTextNoteFragment : Fragment(), DatePickerDialog.OnDateSetListener,
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    fun addNote(title:String?) {
+    fun addNote(title:String?, password:String?) {
         val note: String? = multiLineText.text.toString()
         var id: UUID?=null
-
         val values = ContentValues()
         values.put("title", title)
         values.put("description", note)
         values.put("isNoteDeleted","0")
+        values.put("password",password)
         if(reminderDate!=null) {
             values.put("reminderdate", reminderDate!!.time.toString())
             var delay: Long = abs(System.currentTimeMillis() - reminderDate!!.time.time)
@@ -194,7 +220,6 @@ class AddTextNoteFragment : Fragment(), DatePickerDialog.OnDateSetListener,
         }else values.put("reminderdate", "null")
 
         values.put("notifid", id.toString())
-
         val dbManager = DbManager(this.requireActivity())
         if (idNote != 0 && idNote != null) {
             val selectionArgs = arrayOf(idNote.toString())
