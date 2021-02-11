@@ -105,7 +105,7 @@ open class BaseActivity : AppCompatActivity() {
         // click of the navigation menu
         navigationView!!.setNavigationItemSelectedListener(NavigationView.OnNavigationItemSelectedListener { menuItem -> // Checking if the item is in checked state or not, if not make
             // it in checked state
-            if (menuItem.isChecked) menuItem.isChecked = false else menuItem.isChecked = true
+            menuItem.isChecked = !menuItem.isChecked
 
             // Closing drawer on item click
             drawerLayout!!.closeDrawers()
@@ -122,14 +122,17 @@ open class BaseActivity : AppCompatActivity() {
             intent_login.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
             val intent_aboutus = Intent(this, AboutUsActivity::class.java)
             intent_aboutus.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            val intent_trash= Intent(this, TrashActivity::class.java)
+            intent_aboutus.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
 
             when (menuItem.itemId) {
                 R.id.nav_note -> this.startActivity(intent_note)
                 R.id.nav_calendar -> this.startActivity(intent_calendar)
-                R.id.nav_trash -> Toast.makeText(this, "Trash", Toast.LENGTH_SHORT).show()
+                R.id.nav_trash -> this.startActivity(intent_trash)
                 R.id.nav_add_note -> this.startActivity(intent_add_note)
                 R.id.nav_sync -> this.startActivity(intent_login)
                 R.id.nav_AboutUs -> this.startActivity(intent_aboutus)
+                R.id.nav_trash -> this.startActivity(intent_trash)
                 else -> return@OnNavigationItemSelectedListener true
             }
             false

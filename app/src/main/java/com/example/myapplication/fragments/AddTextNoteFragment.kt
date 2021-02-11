@@ -185,6 +185,7 @@ class AddTextNoteFragment : Fragment(), DatePickerDialog.OnDateSetListener,
         val values = ContentValues()
         values.put("title", title)
         values.put("description", note)
+        values.put("isNoteDeleted","0")
         if(reminderDate!=null) {
             values.put("reminderdate", reminderDate!!.time.toString())
             var delay: Long = abs(System.currentTimeMillis() - reminderDate!!.time.time)

@@ -163,6 +163,7 @@ class AddDrawFragment : Fragment() , DatePickerDialog.OnDateSetListener,
         values.put("title", title)
         values.put("description", note)
         values.put("img", img)
+        values.put("isNoteDeleted","0")
         /*try {
             values.put("reminderdate", reminderDate.toString())
         }catch (e: Exception) {

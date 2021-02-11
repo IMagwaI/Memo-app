@@ -43,7 +43,7 @@ dependencies {
     //color picker
     implementation "dev.sasikanth:colorsheet:1.0.1"
     //calendar
-    implementation 'com.riontech:calendar:1.0'
+    implementation 'com.github.tibolte:agendacalendarview:1.0.4'
     //notification
     implementation 'android.arch.work:work-runtime-ktx:1.0.1'
 

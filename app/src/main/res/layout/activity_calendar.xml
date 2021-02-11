@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:agendaCalendar="http://schemas.android.com/tools">
     <LinearLayout
         android:id="@+id/tab"
         android:layout_width="match_parent"
@@ -10,18 +11,17 @@
 
         <include layout="@layout/gradient_toolbar" />
     </LinearLayout>
-    <com.riontech.calendar.CustomCalendar
-        android:id="@+id/customCalendar"
-        android:layout_width="match_parent"
+    <com.github.tibolte.agendacalendarview.AgendaCalendarView
+        android:id="@+id/agenda_calendar_view"
         android:layout_below="@+id/tab"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp"
+        agendaCalendar:agendaCurrentDayTextColor="@color/theme_primary"
+        agendaCalendar:calendarColor="@color/theme_primary"
+        agendaCalendar:calendarCurrentDayTextColor="@color/calendar_text_current_day"
+        agendaCalendar:calendarDayTextColor="@color/theme_text_icons"
+        agendaCalendar:calendarHeaderColor="@color/theme_primary_dark"
+        agendaCalendar:calendarPastDayTextColor="@color/theme_light_primary"
+        agendaCalendar:fabColor="@color/theme_accent"
         android:layout_height="match_parent"
-        app:endMonth="07"
-        app:endYear="2026"
-        app:startMonth="01"
-        app:startYear="2016">
-    </com.riontech.calendar.CustomCalendar>
+        android:layout_width="match_parent" />
 
 </RelativeLayout>

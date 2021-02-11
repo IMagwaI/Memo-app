@@ -18,8 +18,9 @@ class DbManager(context: Context) {
     val colDate="date"
     val colReminderDate="reminderdate"
     val colNotifId="notifid"
+    val colIisNoteDeleted="isNoteDeleted"
     val dbVersion=1
-    val sqlCreateTable="CREATE TABLE IF NOT EXISTS $dbTable($colId INTEGER PRIMARY KEY,$colTitle TEXT,$colDescription TEXT,$colImg BLOB,$colReminderDate TEXT,$colDate date default CURRENT_DATE,$colNotifId TEXT);"
+    val sqlCreateTable="CREATE TABLE IF NOT EXISTS $dbTable($colId INTEGER PRIMARY KEY,$colTitle TEXT,$colDescription TEXT,$colImg BLOB,$colReminderDate TEXT,$colDate date default CURRENT_DATE,$colNotifId TEXT,$colIisNoteDeleted TEXT);"
     var sqlDB:SQLiteDatabase?=null
 
     init {

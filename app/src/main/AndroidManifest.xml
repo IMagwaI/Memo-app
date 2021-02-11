@@ -32,6 +32,7 @@
         <activity android:name=".CalendarActivity" />
         <activity android:name=".BaseActivity" />
         <activity android:name=".DrawShowActivity" />
+        <activity android:name=".TrashActivity" />
         <activity android:name=".aboutus.AboutUsActivity" />
         <activity android:name=".SplashScreen">
             <intent-filter>
