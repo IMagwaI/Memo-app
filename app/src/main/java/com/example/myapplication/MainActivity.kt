@@ -319,7 +319,6 @@ class MainActivity : BaseActivity() {
                         intent.putExtra("reminderdate", note.reminderdate)
                         intent.putExtra("password", note.password)
 
-
                         startActivity(intent)
                     }
 
@@ -361,7 +360,6 @@ class MainActivity : BaseActivity() {
                         val values = ContentValues()
                         val formatter = SimpleDateFormat("yyyy-MM-dd")
                         val formattedDate = formatter.format(Calendar.getInstance().time)
-
                         values.put("isNoteDeleted", formattedDate)
                         dbManager.update(values, "ID=?", selectionArgs)
 
@@ -375,80 +373,94 @@ class MainActivity : BaseActivity() {
                     val dialog: AlertDialog = AlertDialog.Builder(this.context!!)
                         .setTitle("Enter your password")
                         .setView(typedpassword)
-                        .setPositiveButton("OK", DialogInterface.OnClickListener { dialogInterface, i ->
-                            val checkpassword: String = typedpassword.getText().toString()
-                            if (checkpassword == note.password){
-                                if (note.description == "This is a drawing note, press the note to display it") {
+                        .setPositiveButton(
+                            "OK",
+                            DialogInterface.OnClickListener { dialogInterface, i ->
+                                val checkpassword: String = typedpassword.getText().toString()
+                                if (checkpassword == note.password) {
+                                    if (note.description == "This is a drawing note, press the note to display it") {
 
-                                    val intent = Intent(this.context, DrawShowActivity::class.java)
-                                    intent.putExtra("id", note.id!!)
-                                    intent.putExtra("title", note.title)
-                                    intent.putExtra("description", note.description)
-                                    intent.putExtra("img", note.img)
-
-                                    startActivity(intent)
-
-                                } else {
-                                    dialogBuilder.setTitle(note.title)
-                                    dialogBuilder.setMessage(note.description)
-                                    dialogBuilder.setIcon(R.drawable.writing_note_ready)
-
-                                    dialogBuilder.setPositiveButton("EDIT") { dialog, which ->
-                                        val intent = Intent(this.context, AddActivity::class.java)
+                                        val intent =
+                                            Intent(this.context, DrawShowActivity::class.java)
                                         intent.putExtra("id", note.id!!)
                                         intent.putExtra("title", note.title)
                                         intent.putExtra("description", note.description)
-                                        intent.putExtra("reminderdate", note.reminderdate)
-                                        intent.putExtra("password",note.password)
+                                        intent.putExtra("img", note.img)
 
                                         startActivity(intent)
-                                    }
 
-                                    dialogBuilder.setNegativeButton("CANCEL") { dialog, which ->
-                                        Toast.makeText(
-                                            applicationContext,
-                                            android.R.string.no, Toast.LENGTH_SHORT
-                                        ).show()
+                                    } else {
+                                        dialogBuilder.setTitle(note.title)
+                                        dialogBuilder.setMessage(note.description)
+                                        dialogBuilder.setIcon(R.drawable.writing_note_ready)
 
-                                    }
+                                        dialogBuilder.setPositiveButton("EDIT") { dialog, which ->
+                                            val intent =
+                                                Intent(this.context, AddActivity::class.java)
+                                            intent.putExtra("id", note.id!!)
+                                            intent.putExtra("title", note.title)
+                                            intent.putExtra("description", note.description)
+                                            intent.putExtra("reminderdate", note.reminderdate)
+                                            intent.putExtra("password", note.password)
 
-                                    dialogBuilder.setNeutralButton("DELETE") { dialog, which ->
-                                        Toast.makeText(
-                                            applicationContext,
-                                            "DELETED", Toast.LENGTH_SHORT
-                                        ).show()
-                                        val dbManager = DbManager(this.context!!)
-                                        //delete notification
-                                        val projections = arrayOf("ID", "notifid")
-                                        var cursor = dbManager.query(
-                                            projections,
-                                            "ID like ?",
-                                            selectionArgs,
-                                            "date" + " DESC"
-                                        )
-                                        if (cursor.moveToFirst()) {
-                                            do {
-                                                val id = cursor.getString(cursor.getColumnIndex("notifid"))
-                                                val workManager = WorkManager.getInstance()
-                                                workManager.cancelWorkById(UUID.fromString(id))
-                                            } while (cursor.moveToNext())
+                                            startActivity(intent)
                                         }
-                                        val nbr = dbManager.delete("ID=?", selectionArgs)
-                                        if (nbr > 0)
-                                            Toast.makeText(this.context, "note deleted", Toast.LENGTH_LONG).show()
-                                        querySearch("%")
+
+                                        dialogBuilder.setNegativeButton("CANCEL") { dialog, which ->
+                                            Toast.makeText(
+                                                applicationContext,
+                                                android.R.string.no, Toast.LENGTH_SHORT
+                                            ).show()
+
+                                        }
+
+                                        dialogBuilder.setNeutralButton("DELETE") { dialog, which ->
+                                            Toast.makeText(
+                                                applicationContext,
+                                                "DELETED", Toast.LENGTH_SHORT
+                                            ).show()
+                                            val dbManager = DbManager(this.context!!)
+                                            //delete notification
+                                        if(note.reminderdate!="null")
+                                            {
+                                                val projections = arrayOf("ID", "notifid")
+                                                var cursor = dbManager.query(
+                                                    projections,
+                                                    "ID like ?",
+                                                    selectionArgs,
+                                                    "date" + " DESC"
+                                                )
+                                                if (cursor.moveToFirst()) {
+                                                    do {
+                                                        val id =
+                                                            cursor.getString(cursor.getColumnIndex("notifid"))
+                                                        val workManager = WorkManager.getInstance()
+                                                        workManager.cancelWorkById(
+                                                            UUID.fromString(
+                                                                id
+                                                            )
+                                                        )
+                                                    } while (cursor.moveToNext())
+                                                }
+                                            }
+                                            Toast.makeText(
+                                                this.context,
+                                                "note deleted",
+                                                Toast.LENGTH_LONG
+                                            ).show()
+                                            querySearch("%")
+                                        }
+                                        dialogBuilder.show()
                                     }
-                                    dialogBuilder.show()
+
+                                } else {
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "Password incorrect!", Toast.LENGTH_SHORT
+                                    ).show()
                                 }
 
-                            }else{
-                                Toast.makeText(
-                                    applicationContext,
-                                    "Password incorrect!", Toast.LENGTH_SHORT
-                                ).show()
-                            }
-
-                        })
+                            })
                         .setNegativeButton("Cancel", null)
                         .create()
                     dialog.show()

@@ -1,10 +1,7 @@
 package com.example.myapplication
 
 import android.appwidget.AppWidgetManager
-import android.content.ComponentName
-import android.content.ContentValues
-import android.content.Context
-import android.content.Intent
+import android.content.*
 import android.graphics.Color
 import android.icu.text.SimpleDateFormat
 import android.os.Build
@@ -13,6 +10,7 @@ import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.EditText
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -95,7 +93,7 @@ class TrashActivity:BaseActivity() {
 
     fun searchBar(search: String) {
         var dbManager = DbManager(this)
-        val projections = arrayOf("ID", "title", "description", "date", "reminderdate","isNoteDeleted")
+        val projections = arrayOf("ID", "title", "description", "date", "reminderdate","isNoteDeleted","password")
         val selectionArgs = arrayOf(search,"0")
         var cursor = dbManager.query(projections, "title like ? AND isNoteDeleted != ?", selectionArgs, "date" + " DESC")
         if (cursor.moveToFirst()) {
@@ -106,7 +104,8 @@ class TrashActivity:BaseActivity() {
                 val description = cursor.getString(cursor.getColumnIndex("description"))
                 val date = cursor.getString(3)
                 val reminderdate = cursor.getString(cursor.getColumnIndex("reminderdate"))
-                listNotes.add(Note(id, title, description, date, reminderdate))
+                val password = cursor.getString(cursor.getColumnIndex("password"))
+                listNotes.add(Note(id, title, description, date, reminderdate,password))
             } while (cursor.moveToNext())
         }
         cursor.close()
@@ -118,7 +117,7 @@ class TrashActivity:BaseActivity() {
     @RequiresApi(Build.VERSION_CODES.N)
     fun querySearch(search: String) {
         var dbManager = DbManager(this)
-        val projections = arrayOf("ID", "title", "description", "date", "reminderdate","img","isNoteDeleted")
+        val projections = arrayOf("ID", "title", "description", "date", "reminderdate","img","isNoteDeleted","password")
         var selectionArgs = arrayOf(search,"0")
         var cursor = dbManager.query(projections, "ID like ? AND isNoteDeleted != ?", selectionArgs, "date" + " DESC")
         var countmemos: Int = cursor.count
@@ -149,11 +148,12 @@ class TrashActivity:BaseActivity() {
                     val date = cursor.getString(3)
                     val reminderDate = cursor.getString(cursor.getColumnIndex("reminderdate"))
                     val img = cursor.getBlob(cursor.getColumnIndex("img"))
+                    val password = cursor.getString(cursor.getColumnIndex("password"))
 
                     try {
-                        listNotes.add(Note(id, title, description, date, img, reminderDate))
+                        listNotes.add(Note(id, title, description, date, img, reminderDate,password))
                     } catch (e: Exception) {
-                        listNotes.add(Note(id, title, description, date, reminderDate))
+                        listNotes.add(Note(id, title, description, date, reminderDate,password))
                     }
                 }
 
@@ -230,13 +230,18 @@ class TrashActivity:BaseActivity() {
                 querySearch("%")
             }
             myView.textTitle.text = note.title
-            if(note.description?.length!! > 60){
-                myView.textView.text = note.description?.take(60) + "..."
+            if(note.password == "") {
+                if (note.description?.length!! > 60) {
+                    myView.textView.text = note.description?.take(60) + "..."
+                } else {
+                    myView.textView.text = note.description
+                }
             }else{
-                myView.textView.text = note.description}
+                myView.lock.visibility= View.VISIBLE
+                myView.textView.text = "This note is protected with a password"
+            }
             myView.date.text = note.date
             val selectionArgs = arrayOf(note.id.toString())
-            val dbManager = DbManager(this.context!!)
             myView.delete.setOnClickListener {
                 //Toast.makeText(this.context, "working", Toast.LENGTH_SHORT).show()
                 val dbManager = DbManager(this.context!!)
@@ -260,7 +265,7 @@ class TrashActivity:BaseActivity() {
                 }
                 val nbr = dbManager.delete("ID=?", selectionArgs)
                 if (nbr > 0)
-                    Toast.makeText(this.context, "note deleted", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this.context, "note deleted permanatly", Toast.LENGTH_SHORT).show()
                 if(listNotes.size==1)
                 {
                     val lastNotes = ArrayList<Note>()
@@ -276,97 +281,217 @@ class TrashActivity:BaseActivity() {
             myView.wholenote.setOnClickListener {
                 val dialogBuilder = AlertDialog.Builder(this@TrashActivity)
 
+                if(note.password=="") {
+                    if (note.description == "This is a drawing note, press the note to display it") {
 
-                if (note.description == "This is a drawing note, press the note to display it") {
+                        val intent = Intent(this.context, DrawShowActivity::class.java)
+                        intent.putExtra("id", note.id!!)
+                        intent.putExtra("title", note.title)
+                        intent.putExtra("description", note.description)
+                        intent.putExtra("img", note.img)
 
-                    val intent = Intent(this.context, DrawShowActivity::class.java)
-                    intent.putExtra("id", note.id!!)
-                    intent.putExtra("title", note.title)
-                    intent.putExtra("description", note.description)
-                    intent.putExtra("img", note.img)
+                        startActivity(intent)
+                    } else {
+                        dialogBuilder.setTitle(note.title)
+                        dialogBuilder.setMessage(note.description)
 
-                    startActivity(intent)
-                } else {
-                    dialogBuilder.setTitle(note.title)
-                    dialogBuilder.setMessage(note.description)
-
-                    dialogBuilder.setIcon(R.drawable.writing_note_ready)
-                    //restore
-                    dialogBuilder.setPositiveButton("RESTORE") { dialog, which ->
-                        Toast.makeText(
-                            applicationContext,
-                            "restore the note", Toast.LENGTH_SHORT
-                        ).show()
-                        val values= ContentValues()
-                        values.put("isNoteDeleted",0)
-                        val dbManager = DbManager(this.context!!)
-                        dbManager.update(values, "ID=?", selectionArgs)
-                        if(note.reminderdate!="null") {
-                            val cal = Calendar.getInstance()
-                            val sdf = SimpleDateFormat( "EEE MMM dd HH:mm:ss zzz yyyy",Locale.ENGLISH)
-                            cal.time = sdf.parse(note.reminderdate)
-                            var delay: Long = abs(System.currentTimeMillis() - cal!!.time.time)
-                            println("this is delay" + delay)
-                            scheduleNotification(delay / 1000, note.title!!, note.description!!)
-                        }
-                        if(listNotes.size==1)
-                        {
-                            val lastNotes = ArrayList<Note>()
-                            val myAdapter = MyNoteAdapter(this.context!!, lastNotes)
-                            myList.adapter = myAdapter
-
-                        }else
-                            querySearch("%")
-                    }
-
-                    dialogBuilder.setNegativeButton("CANCEL") { dialog, which ->
-                        Toast.makeText(
-                            applicationContext,
-                            android.R.string.no, Toast.LENGTH_SHORT
-                        ).show()
-
-                    }
-
-                    dialogBuilder.setNeutralButton("DELETE PERMANENTLY") { dialog, which ->
-                        Toast.makeText(
-                            applicationContext,
-                            "DELETED", Toast.LENGTH_SHORT
-                        ).show()
-                        val dbManager = DbManager(this.context!!)
-                        //delete notification
-                        if(note.reminderdate!="null")
-                        //delete notification
-                        {
-                            val projections = arrayOf("ID", "notifid")
-                            var cursor = dbManager.query(
-                                projections,
-                                "ID like ?",
-                                selectionArgs,
-                                "date" + " DESC"
-                            )
-                            if (cursor.moveToFirst()) {
-                                do {
-                                    val id = cursor.getString(cursor.getColumnIndex("notifid"))
-                                    val workManager = WorkManager.getInstance()
-                                    workManager.cancelWorkById(UUID.fromString(id))
-                                } while (cursor.moveToNext())
+                        dialogBuilder.setIcon(R.drawable.writing_note_ready)
+                        //restore
+                        dialogBuilder.setPositiveButton("RESTORE") { dialog, which ->
+                            Toast.makeText(
+                                applicationContext,
+                                "note restored", Toast.LENGTH_SHORT
+                            ).show()
+                            val values = ContentValues()
+                            values.put("isNoteDeleted", 0)
+                            val dbManager = DbManager(this.context!!)
+                            dbManager.update(values, "ID=?", selectionArgs)
+                            if (note.reminderdate != "null") {
+                                val cal = Calendar.getInstance()
+                                val sdf =
+                                    SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH)
+                                cal.time = sdf.parse(note.reminderdate)
+                                var delay: Long = abs(System.currentTimeMillis() - cal!!.time.time)
+                                println("this is delay" + delay)
+                                scheduleNotification(delay / 1000, note.title!!, note.description!!)
                             }
-                        }
-                        val nbr = dbManager.delete("ID=?", selectionArgs)
-                        if (nbr > 0)
-                            Toast.makeText(this.context, "note deleted permanently", Toast.LENGTH_LONG).show()
-                        if(listNotes.size==1)
-                        {
-                            val lastNotes = ArrayList<Note>()
-                            val myAdapter = MyNoteAdapter(this.context!!, lastNotes)
-                            myList.adapter = myAdapter
+                            if (listNotes.size == 1) {
+                                val lastNotes = ArrayList<Note>()
+                                val myAdapter = MyNoteAdapter(this.context!!, lastNotes)
+                                myList.adapter = myAdapter
 
-                            //finish()
-                            //startActivity(getIntent())
-                        }else
-                            querySearch("%")
+                            } else
+                                querySearch("%")
+                        }
+
+                        dialogBuilder.setNegativeButton("CANCEL") { dialog, which ->
+                            Toast.makeText(
+                                applicationContext,
+                                android.R.string.no, Toast.LENGTH_SHORT
+                            ).show()
+
+                        }
+
+                        dialogBuilder.setNeutralButton("DELETE PERMANENTLY") { dialog, which ->
+                            Toast.makeText(
+                                applicationContext,
+                                "DELETED", Toast.LENGTH_SHORT
+                            ).show()
+                            val dbManager = DbManager(this.context!!)
+                            //delete notification
+                            if (note.reminderdate != "null")
+                            //delete notification
+                            {
+                                val projections = arrayOf("ID", "notifid")
+                                var cursor = dbManager.query(
+                                    projections,
+                                    "ID like ?",
+                                    selectionArgs,
+                                    "date" + " DESC"
+                                )
+                                if (cursor.moveToFirst()) {
+                                    do {
+                                        val id = cursor.getString(cursor.getColumnIndex("notifid"))
+                                        val workManager = WorkManager.getInstance()
+                                        workManager.cancelWorkById(UUID.fromString(id))
+                                    } while (cursor.moveToNext())
+                                }
+                            }
+                            val nbr = dbManager.delete("ID=?", selectionArgs)
+                            if (nbr > 0)
+                                Toast.makeText(
+                                    this.context,
+                                    "note deleted permanently",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            if (listNotes.size == 1) {
+                                val lastNotes = ArrayList<Note>()
+                                val myAdapter = MyNoteAdapter(this.context!!, lastNotes)
+                                myList.adapter = myAdapter
+
+                                //finish()
+                                //startActivity(getIntent())
+                            } else
+                                querySearch("%")
+                        }
+                        dialogBuilder.show()
                     }
-                    dialogBuilder.show()
+                }else{val typedpassword = EditText(this.context)
+                    val dialog: AlertDialog = AlertDialog.Builder(this.context!!)
+                        .setTitle("Enter your password")
+                        .setView(typedpassword)
+                        .setPositiveButton(
+                            "OK",
+                            DialogInterface.OnClickListener { dialogInterface, i ->
+                                val checkpassword: String = typedpassword.getText().toString()
+                                if (checkpassword == note.password) {
+                                    if (note.description == "This is a drawing note, press the note to display it") {
+
+                                        val intent = Intent(this.context, DrawShowActivity::class.java)
+                                        intent.putExtra("id", note.id!!)
+                                        intent.putExtra("title", note.title)
+                                        intent.putExtra("description", note.description)
+                                        intent.putExtra("img", note.img)
+
+                                        startActivity(intent)
+                                    } else {
+                                        dialogBuilder.setTitle(note.title)
+                                        dialogBuilder.setMessage(note.description)
+
+                                        dialogBuilder.setIcon(R.drawable.writing_note_ready)
+                                        //restore
+                                        dialogBuilder.setPositiveButton("RESTORE") { dialog, which ->
+                                            Toast.makeText(
+                                                applicationContext,
+                                                "restore the note", Toast.LENGTH_SHORT
+                                            ).show()
+                                            val values = ContentValues()
+                                            values.put("isNoteDeleted", 0)
+                                            val dbManager = DbManager(this.context!!)
+                                            dbManager.update(values, "ID=?", selectionArgs)
+                                            if (note.reminderdate != "null") {
+                                                val cal = Calendar.getInstance()
+                                                val sdf =
+                                                    SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH)
+                                                cal.time = sdf.parse(note.reminderdate)
+                                                var delay: Long = abs(System.currentTimeMillis() - cal!!.time.time)
+                                                println("this is delay" + delay)
+                                                scheduleNotification(delay / 1000, note.title!!, note.description!!)
+                                            }
+                                            if (listNotes.size == 1) {
+                                                val lastNotes = ArrayList<Note>()
+                                                val myAdapter = MyNoteAdapter(this.context!!, lastNotes)
+                                                myList.adapter = myAdapter
+
+                                            } else
+                                                querySearch("%")
+                                        }
+
+                                        dialogBuilder.setNegativeButton("CANCEL") { dialog, which ->
+                                            Toast.makeText(
+                                                applicationContext,
+                                                android.R.string.no, Toast.LENGTH_SHORT
+                                            ).show()
+
+                                        }
+
+                                        dialogBuilder.setNeutralButton("DELETE PERMANENTLY") { dialog, which ->
+                                            Toast.makeText(
+                                                applicationContext,
+                                                "DELETED", Toast.LENGTH_SHORT
+                                            ).show()
+                                            val dbManager = DbManager(this.context!!)
+                                            //delete notification
+                                            if (note.reminderdate != "null")
+                                            //delete notification
+                                            {
+                                                val projections = arrayOf("ID", "notifid")
+                                                var cursor = dbManager.query(
+                                                    projections,
+                                                    "ID like ?",
+                                                    selectionArgs,
+                                                    "date" + " DESC"
+                                                )
+                                                if (cursor.moveToFirst()) {
+                                                    do {
+                                                        val id = cursor.getString(cursor.getColumnIndex("notifid"))
+                                                        val workManager = WorkManager.getInstance()
+                                                        workManager.cancelWorkById(UUID.fromString(id))
+                                                    } while (cursor.moveToNext())
+                                                }
+                                            }
+                                            val nbr = dbManager.delete("ID=?", selectionArgs)
+                                            if (nbr > 0)
+                                                Toast.makeText(
+                                                    this.context,
+                                                    "note deleted permanently",
+                                                    Toast.LENGTH_LONG
+                                                ).show()
+                                            if (listNotes.size == 1) {
+                                                val lastNotes = ArrayList<Note>()
+                                                val myAdapter = MyNoteAdapter(this.context!!, lastNotes)
+                                                myList.adapter = myAdapter
+
+                                                //finish()
+                                                //startActivity(getIntent())
+                                            } else
+                                                querySearch("%")
+                                        }
+                                        dialogBuilder.show()
+                                    }
+
+                                } else {
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "Password incorrect!", Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+
+                            })
+                        .setNegativeButton("Cancel", null)
+                        .create()
+                    dialog.show()
+
                 }
             }
             if (note.reminderdate != "null")
