@@ -10,7 +10,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/IMagwaI/Projet-Android">
-    <img src="https://i.ibb.co/ccqkLKL/myLogo.png" alt="Logo" width="80" height="80">
+    <img src="blob/master/app/src/main/res/mipmap-mdpi/mylogofinal.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">Speech note</h3>
