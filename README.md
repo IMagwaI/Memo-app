@@ -8,16 +8,14 @@
 
 <!-- PROJECT LOGO -->
 ## Speach note App
+
 ![](https://i.ibb.co/4gVPR4p/logo.png?raw=true)
 
-</br>
 ## Screenshots
-![](https://i.ibb.co/1225V0z/first.jpg?raw=true)
-</br>
 
-  Home Page                 
-:-------------------------:|:-------------------------:
-![](https://i.ibb.co/MNv5tDX/homedrawer.jpg?raw=true)|![](https://i.ibb.co/Zdm0dZN/home.jpg?raw=true)
+Splash screen                 |Home                 |   Navigation drawer        
+:-------------------------:|:-------------------------:|:-------------------------:
+![](https://i.ibb.co/1225V0z/first.jpg?raw=true)|![](https://i.ibb.co/MNv5tDX/homedrawer.jpg?raw=true)|![](https://i.ibb.co/Zdm0dZN/home.jpg?raw=true)
 
 
 ## Adding new note
@@ -26,6 +24,7 @@
 ![](https://i.ibb.co/BKK9PRC/text.jpg?raw=true)|![](https://i.ibb.co/d2hNkXB/voice.jpg?raw=true)|![](https://i.ibb.co/t37cN8m/draw.jpg?raw=true)
 
 ## Async with google
+Save                 |   Upload 
 :-------------------------:|:-------------------------:
 ![](https://i.ibb.co/FKQC9n8/save.jpg?raw=true)|![](https://i.ibb.co/VwrVWnR/upload.jpg?raw=true)
 
