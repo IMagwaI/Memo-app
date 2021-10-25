@@ -7,20 +7,35 @@
 
 
 <!-- PROJECT LOGO -->
-![](blob/master/app/src/main/res/mipmap-mdpi/mylogofinal.png?raw=true)
-<br />
-<p align="center">
-  <h3 align="center">Speech note</h3>
-</p>
+## Speach note App
+![](https://i.ibb.co/4gVPR4p/logo.png?raw=true)
+
+</br>
+## Screenshots
+![](https://i.ibb.co/1225V0z/first.jpg?raw=true)
+</br>
+
+  Home Page                 
+:-------------------------:|:-------------------------:
+![](https://i.ibb.co/MNv5tDX/homedrawer.jpg?raw=true)|![](https://i.ibb.co/Zdm0dZN/home.jpg?raw=true)
 
 
-[contributors-shield]: https://img.shields.io/github/contributors/IMagwaI/Projet-Android.svg?style=for-the-badge
-[contributors-url]: https://github.com/IMagwaI/Projet-Android/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/IMagwaI/Projet-Android.svg?style=for-the-badge
-[forks-url]: https://github.com/IMagwaI/Projet-Android/network/members
-[stars-shield]: https://img.shields.io/github/stars/IMagwaI/Projet-Android.svg?style=for-the-badge
-[stars-url]: https://github.com/IMagwaI/Projet-Android/stargazers
-[issues-shield]: https://img.shields.io/github/issues/IMagwaI/Projet-Android.svg?style=for-the-badge
-[issues-url]: https://github.com/IMagwaI/Projet-Android/issues
-[license-shield]: https://img.shields.io/github/license/IMagwaI/Projet-Android.svg?style=for-the-badge
+## Adding new note
+  Text                 |   Voice        |  Draw        
+:-------------------------:|:-------------------------:|:-------------------------:
+![](https://i.ibb.co/BKK9PRC/text.jpg?raw=true)|![](https://i.ibb.co/d2hNkXB/voice.jpg?raw=true)|![](https://i.ibb.co/t37cN8m/draw.jpg?raw=true)
+
+## Async with google
+:-------------------------:|:-------------------------:
+![](https://i.ibb.co/FKQC9n8/save.jpg?raw=true)|![](https://i.ibb.co/VwrVWnR/upload.jpg?raw=true)
+
+[contributors-shield]: https://img.shields.io/github/contributors/IMagwaI/Memo-app.svg?style=for-the-badge
+[contributors-url]: https://github.com/IMagwaI/Memo-app/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/IMagwaI/Memo-app.svg?style=for-the-badge
+[forks-url]: https://github.com/IMagwaI/Memo-app/network/members
+[stars-shield]: https://img.shields.io/github/stars/IMagwaI/Memo-app.svg?style=for-the-badge
+[stars-url]: https://github.com/IMagwaI/Memo-app/stargazers
+[issues-shield]: https://img.shields.io/github/issues/IMagwaI/Memo-app.svg?style=for-the-badge
+[issues-url]: https://github.com/IMagwaI/Memo-app/issues
+[license-shield]: https://img.shields.io/github/license/IMagwaI/Memo-app.svg?style=for-the-badge
 [license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
